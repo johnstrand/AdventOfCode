@@ -1,20 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Threading;
 
 namespace Day13
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             var input = File.ReadAllText("Input.txt");
             var grid = Grid.Parse(input);
-            using (var draw = new ImageDraw(grid.Width * 10 + 10, grid.Height * 10 + 10))
+            using (var draw = new ImageDraw(grid.Width * 5 + 5, grid.Height * 5 + 5))
             {
                 while (true)
                 {
@@ -26,31 +24,31 @@ namespace Day13
         }
     }
 
-    interface IDrawable
+    internal interface IDrawable
     {
         void Plot(int x, int y, char c);
         void Plot(int x, int y, string str);
     }
 
-    class ImageDraw : IDrawable, IDisposable
+    internal class ImageDraw : IDrawable, IDisposable
     {
-        int index;
-        Bitmap img;
-        Graphics g;
-        //AnimatedGif.AnimatedGifCreator gif;
-        Font font = new Font("FiraCode", 10);
+        private readonly int index;
+        private Bitmap img;
+        private Graphics g;
+        private AnimatedGif.AnimatedGifCreator gif;
+        private readonly Font font = new Font("FiraCode", 10);
         public ImageDraw(int w, int h)
         {
             img = new Bitmap(w, h);
             g = Graphics.FromImage(img);
             g.FillRectangle(Brushes.Black, new Rectangle(new Point(0, 0), img.Size));
-            //gif = AnimatedGif.AnimatedGif.Create(@"c:\temp\output\2018.13.gif", 100, 0);
+            gif = AnimatedGif.AnimatedGif.Create(@"c:\temp\output\2018.13.gif", 100, 0);
         }
 
         public void Recycle()
         {
-            //gif.AddFrame(img);
-            img.Save($@"c:\temp\output\{(index++).ToString("00000")}.png", ImageFormat.Png);
+            gif.AddFrame(img);
+            //img.Save($@"c:\temp\output\{(index++).ToString("00000")}.png", ImageFormat.Png);
             var w = img.Width;
             var h = img.Height;
             g.Dispose();
@@ -67,35 +65,75 @@ namespace Day13
         public void Plot(int x, int y, string str)
         {
             var size = g.MeasureString(str, font);
-            g.DrawString(str, font, Brushes.White, (x * 10) - (size.Width / 2) + 5, y * 10);
+            g.DrawString(str, font, Brushes.White, (x * 5) - (size.Width / 2) + 2, y * 5);
         }
 
         public void Dispose()
         {
-            img.Save($@"c:\temp\output\{(index++).ToString("00000")}.png", ImageFormat.Png);
-            //gif.AddFrame(img);
+            //img.Save($@"c:\temp\output\{(index++).ToString("00000")}.png", ImageFormat.Png);
+            gif.AddFrame(img);
             g.Dispose();
             img.Dispose();
         }
     }
 
-    class Grid
+    internal class Grid
     {
         public int Height => Cells.Keys.Max(k => k.y);
         public int Width => Cells.Keys.Max(k => k.x);
         public Cart[] Carts { get; set; }
         public Dictionary<(int x, int y), Cell> Cells { get; set; } = new Dictionary<(int x, int y), Cell>();
+
+        private HashSet<(int x, int y)> crashMarkers = new HashSet<(int x, int y)>();
         public void Draw(IDrawable draw)
         {
-            foreach(var cell in Cells.Values)
+            foreach (var cell in Cells.Values)
             {
                 draw.Plot(cell.X, cell.Y, cell.CellType);
             }
 
-            foreach(var cart in Carts)
+            foreach (var cart in Carts.Where(c => !c.Crashed))
             {
                 draw.Plot(cart.X, cart.Y, cart.Render());
-                cart.Update(Cells, Carts.Where(c => c != cart));
+                cart.Update(Cells);
+            }
+
+            for (var index = 0; index < Carts.Length - 1; index++)
+            {
+                for (var sindex = index + 1; sindex < Carts.Length; sindex++)
+                {
+                    if (Cart.HasCrashed(Carts[index], Carts[sindex]))
+                    {
+                        Carts[index].Crashed = true;
+                        Carts[sindex].Crashed = true;
+                        if (crashMarkers.Add((Carts[index].X, Carts[index].Y)))
+                        {
+                            Console.WriteLine($"{Carts[index].X}x{Carts[index].Y}");
+                        }
+                        continue;
+                    }
+                }
+            }
+            //var collided = Carts.Where(c => !c.Crashed).GroupBy(c => (c.X, c.Y)).Where(g => g.Count() > 1);
+
+            /*if(collided.Any())
+            {
+                foreach(var pos in collided)
+                {
+                    if (crashMarkers.Add(pos.Key))
+                    {
+                        Console.WriteLine($"{pos.Key.X}x{pos.Key.Y}");
+                    }
+                }
+                foreach(var c in collided.SelectMany(c => c))
+                {
+                    c.Crashed = true;
+                }
+                Console.WriteLine(Carts.Count(c => !c.Crashed));
+            }*/
+            if (Carts.Count(c => !c.Crashed) == 1)
+            {
+
             }
         }
         public static Grid Parse(string input)
@@ -106,18 +144,18 @@ namespace Day13
             {
                 string row;
                 var y = 0;
-                while(!string.IsNullOrEmpty(row = reader.ReadLine()))
+                while (!string.IsNullOrEmpty(row = reader.ReadLine()))
                 {
-                    for(var x = 0; x < row.Length; x++)
+                    for (var x = 0; x < row.Length; x++)
                     {
                         var token = row[x];
-                        if(Cart.IsCart(token))
+                        if (Cart.IsCart(token))
                         {
                             carts.Add(Cart.Create(x, y, token));
                             cells.Add(Cell.Create(x, y, '-'));
                         }
 
-                        if(Cell.IsCell(token))
+                        if (Cell.IsCell(token))
                         {
                             cells.Add(Cell.Create(x, y, token));
                         }
@@ -133,16 +171,23 @@ namespace Day13
         }
     }
 
-    class Cell
+    internal class Cell
     {
         public int X { get; set; }
         public int Y { get; set; }
         public char CellType { get; set; }
-        public static bool IsCell(char c) => new[] { '/', '\\', '-', '+', '|' }.Contains(c);
-        public static Cell Create(int x, int y, char c) => new Cell { X = x, Y = y, CellType = c };
+        public static bool IsCell(char c)
+        {
+            return new[] { '/', '\\', '-', '+', '|' }.Contains(c);
+        }
+
+        public static Cell Create(int x, int y, char c)
+        {
+            return new Cell { X = x, Y = y, CellType = c };
+        }
     }
 
-    class Cart
+    internal class Cart
     {
         private static Dictionary<char, Direction> dirMappings = new Dictionary<char, Direction>
         {
@@ -164,40 +209,28 @@ namespace Day13
         public Direction Facing { get; set; }
         public int Intersection { get; set; }
         public bool Crashed { get; set; }
-        public char Render() => Crashed ? 'X' : dirMappings.First(kv => kv.Value == Facing).Key;
-        public void Update(Dictionary<(int x, int y), Cell> cells, IEnumerable<Cart> otherCarts)
+        public char Render()
         {
-            if(Crashed)
+            return Crashed ? 'X' : dirMappings.First(kv => kv.Value == Facing).Key;
+        }
+
+        public void Update(Dictionary<(int x, int y), Cell> cells)
+        {
+            if (Crashed)
             {
                 return;
             }
-            X += 
+            X +=
                 Facing == Direction.Left ? -1 :
                 Facing == Direction.Right ? 1 : 0;
 
-            Y += 
+            Y +=
                 Facing == Direction.Up ? -1 :
                 Facing == Direction.Down ? 1 : 0;
 
-            foreach(var cart in otherCarts)
-            {
-                if(cart.X != X || cart.Y != Y)
-                {
-                    continue;
-                }
-                cart.Crashed = true;
-                Crashed = true;
-            }
-
-            if(Crashed)
-            {
-                Console.WriteLine($"{X},{Y}");
-                return;
-            }
-
             var cell = cells[(X, Y)];
 
-            if(cell.CellType == '\\')
+            if (cell.CellType == '\\')
             {
                 Facing =
                     Facing == Direction.Right ? Direction.Down :
@@ -206,7 +239,7 @@ namespace Day13
                     Direction.Left;
             }
 
-            if(cell.CellType == '/')
+            if (cell.CellType == '/')
             {
                 Facing =
                     Facing == Direction.Left ? Direction.Down :
@@ -215,9 +248,9 @@ namespace Day13
                     Direction.Right;
             }
 
-            if(cell.CellType == '+')
+            if (cell.CellType == '+')
             {
-                if(Intersection == 0)
+                if (Intersection == 0)
                 {
                     Facing =
                         Facing == Direction.Up ? Direction.Left :
@@ -225,7 +258,7 @@ namespace Day13
                         Facing == Direction.Down ? Direction.Right :
                         Direction.Up;
                 }
-                if(Intersection == 2)
+                if (Intersection == 2)
                 {
                     Facing =
                         Facing == Direction.Up ? Direction.Right :
@@ -236,8 +269,39 @@ namespace Day13
                 Intersection = (Intersection + 1) % 3;
             }
         }
+        public static bool HasCrashed(Cart c1, Cart c2)
+        {
+            if (c1.X == c2.X && c1.Y == c2.Y)
+            {
+                return true;
+            }
 
-        public static bool IsCart(char c) => dirMappings.ContainsKey(c);
-        public static Cart Create(int x, int y, char c) => new Cart { X = x, Y = y, Facing = dirMappings[c], Intersection = 0 };
+            if (c1.Facing == Direction.Up && c1.X == c2.X && c1.Y + 1 == c1.Y)
+            {
+                return true;
+            }
+            if (c1.Facing == Direction.Down && c1.X == c2.X && c1.Y - 1 == c1.Y)
+            {
+                return true;
+            }
+            if (c1.Facing == Direction.Left && c1.X + 1 == c2.X && c1.Y == c1.Y)
+            {
+                return true;
+            }
+            if (c1.Facing == Direction.Right && c1.X - 1 == c2.X && c1.Y == c1.Y)
+            {
+                return true;
+            }
+            return false;
+        }
+        public static bool IsCart(char c)
+        {
+            return dirMappings.ContainsKey(c);
+        }
+
+        public static Cart Create(int x, int y, char c)
+        {
+            return new Cart { X = x, Y = y, Facing = dirMappings[c], Intersection = 0 };
+        }
     }
 }
