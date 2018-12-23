@@ -10,25 +10,35 @@ namespace Day18
     {
         static void Main(string[] args)
         {
+            for (var index = 0; index < 50 * 50; index++)
+            {
+                surroundingIndices.Add(index, SurroundingIndices(index, 50, 50).ToList());
+            }
             var state = string.Join("", File.ReadAllLines("Input.txt")).ToCharArray();
             var limit = 100000000;
             var next = 0;
+            var trees = 0;
+            var yards = 0;
             for (var min = 0; min < limit; min++)
             {
-                Display(state, 50);
+                //Display(state, 50);
                 //Console.WriteLine();
                 //Console.WriteLine($"Time slice: {min}");
                 //Thread.Sleep(1000);
-                if (min > next)
+                if (min == next)
                 {
                     next += 1000;
-                    Console.Write($"{min.ToString("N0")} / {limit.ToString("N0")}\r");
+                    trees = state.Count(c => c == '|');
+                    yards = state.Count(c => c == '#');
+                    Console.WriteLine($"Resource count at index {min}: {trees} * {yards} = {trees * yards}. ");
+
+
                 }
-                
+
                 state = Mutate(state, 50, 50);
             }
-            var trees = state.Count(c => c == '|');
-            var yards = state.Count(c => c == '#');
+            trees = state.Count(c => c == '|');
+            yards = state.Count(c => c == '#');
             Console.Write($"Resource count: {trees} * {yards} = {trees * yards}. ");
 
             Console.Read();
@@ -44,29 +54,78 @@ namespace Day18
         static char[] Mutate(char[] state, int w, int h)
         {
             return state.Select((grid, index) =>
-                Map(grid, SurroundingIndices(index, w, h).Select(i => state[i]).ToArray())).ToArray();
+                Map(grid, surroundingIndices[index].Select(i => state[i]).ToArray())).ToArray();
         }
 
         static char Map(char value, char[] surrounding)
         {
-            var s = (from x in surrounding group x by x into g select new { g.Key, Count = g.Count() }).ToDictionary(x => x.Key, x => x.Count);
+            /*
+            var s = new Dictionary<char, int>();
+            foreach(var c in surrounding)
+            {
+                if(s.ContainsKey(c))
+                {
+                    s[c]++;
+                }
+                else
+                {
+                    s.Add(c, 1);
+                }
+            }*/
             if (value == '.')
             {
-                return s.ContainsKey('|') && s['|'] > 2 ? '|' : '.';
+                return HasTwo(surrounding, '|') ? '|' : '.';
             }
 
             if (value == '|')
             {
-                return s.ContainsKey('#') && s['#'] > 2 ? '#' : '|';
+                return HasTwo(surrounding, '#') ? '#' : '|';
             }
+
 
             if (value == '#')
             {
-                return s.ContainsKey('#') && s.ContainsKey('|') ? '#' : '.';
+                return BothOf(surrounding, '#', '|') ? '#' : '.';
             }
             return value;
         }
 
+        static bool BothOf(char[] list, char c1, char c2)
+        {
+            var i1 = false;
+            var i2 = false;
+            foreach (var item in list)
+            {
+                i1 = i1 || item == c1;
+                i2 = i2 || item == c2;
+                if (i1 && i2)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        static bool HasTwo(char[] list, char target)
+        {
+            var count = 0;
+            foreach (var item in list)
+            {
+                if (item == target)
+                {
+                    count++;
+                    if (count > 2)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        static Dictionary<int, List<int>> surroundingIndices = new Dictionary<int, List<int>>();
         static IEnumerable<int> SurroundingIndices(int index, int w, int h)
         {
             var x = index % w;
