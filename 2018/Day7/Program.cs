@@ -29,10 +29,21 @@ namespace Day7
                 s.ResolvedBy.Add(resolver);
             }
 
-            while(steps.Any(s => s.ResolvedBy.Any()))
+            while(steps.Any(s => !s.Resolved))
             {
+                var next = steps
+                    .Where(s => !s.ResolvedBy.Any() && !s.Resolved)
+                    .OrderBy(s => s.Name).First();
 
+                Console.Write(next.Name);
+                next.Resolved = true;
+                foreach(var step in steps)
+                {
+                    step.ResolvedBy.Remove(next.Name);
+                }
             }
+            Console.WriteLine();
+            Console.Read();
         }
     }
 
