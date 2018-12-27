@@ -12,15 +12,12 @@ namespace Day6
         private static void Main(string[] args)
         {
             Part1();
+            Part2();
             Console.Read();
         }
 
         private static void Part1()
         {
-            if (Directory.Exists("output1"))
-            {
-                Directory.Delete("output1", true);
-            }
             var grid = new Grid(1000, 1000);
             grid.Register("turn on", (state, start, end) =>
             {
@@ -46,7 +43,53 @@ namespace Day6
             {
                 For(start, end, p =>
                 {
-                    state[p.X, p.Y] = (byte)(state[p.X, p.Y] == 0 ? 1 : 0);
+                    state[p.X, p.Y] = (state[p.X, p.Y] == 0 ? 1 : 0);
+                });
+
+                return state;
+            });
+            var frame = 1;
+            foreach (var line in File.ReadAllLines("Input.txt"))
+            {
+                Console.Write($"Processing frame {frame.ToString("00000")}\r");
+                var m = Regex.Match(line, @"^(?<command>.+) (?<from>.+?) through (?<to>.+?)$");
+                var cmd = m.Groups["command"].Value;
+                var from = ParsePoint(m.Groups["from"].Value);
+                var to = ParsePoint(m.Groups["to"].Value);
+                grid.Raise(cmd, from, to);
+                frame++;
+            }
+            Console.WriteLine();
+            Console.WriteLine(grid.Count(b => b > 0));
+        }
+        private static void Part2()
+        {
+            var grid = new Grid(1000, 1000);
+            grid.Register("turn on", (state, start, end) =>
+            {
+                For(start, end, p =>
+                {
+                    state[p.X, p.Y]++;
+                });
+
+                return state;
+            });
+
+            grid.Register("turn off", (state, start, end) =>
+            {
+                For(start, end, p =>
+                {
+                    state[p.X, p.Y] = Math.Max(state[p.X, p.Y] - 1, 0);
+                });
+
+                return state;
+            });
+
+            grid.Register("toggle", (state, start, end) =>
+            {
+                For(start, end, p =>
+                {
+                    state[p.X, p.Y] += 2;
                 });
 
                 return state;
@@ -64,9 +107,8 @@ namespace Day6
                 frame++;
             }
             Console.WriteLine();
-            Console.WriteLine(grid.Count(b => b > 0));
+            Console.WriteLine(grid.Sum());
         }
-
         private static Point ParsePoint(string input)
         {
             var parts = input.Split(',').Select(int.Parse).ToList();
@@ -86,11 +128,23 @@ namespace Day6
 
     internal class Grid
     {
-        private byte[,] grid;
+        private int[,] grid;
         private readonly int width;
         private readonly int height;
-        private readonly Dictionary<string, Func<byte[,], Point, Point, byte[,]>> reducers = new Dictionary<string, Func<byte[,], Point, Point, byte[,]>>();
-        public int Count(Func<byte, bool> counter)
+        private readonly Dictionary<string, Func<int[,], Point, Point, int[,]>> reducers = new Dictionary<string, Func<int[,], Point, Point, int[,]>>();
+        public int Sum()
+        {
+            var sum = 0;
+            for (var y = 0; y < height; y++)
+            {
+                for (var x = 0; x < width; x++)
+                {
+                    sum += grid[x, y];
+                }
+            }
+            return sum;
+        }
+        public int Count(Func<int, bool> counter)
         {
             var count = 0;
             for (var y = 0; y < height; y++)
@@ -106,10 +160,10 @@ namespace Day6
         {
             this.width = width;
             this.height = height;
-            grid = new byte[width, height];
+            grid = new int[width, height];
         }
 
-        public void Register(string ev, Func<byte[,], Point, Point, byte[,]> reducer)
+        public void Register(string ev, Func<int[,], Point, Point, int[,]> reducer)
         {
             reducers.Add(ev, reducer);
         }
