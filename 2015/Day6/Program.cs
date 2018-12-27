@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -13,15 +12,15 @@ namespace Day6
         private static void Main(string[] args)
         {
             Part1();
+            Console.Read();
         }
 
         private static void Part1()
         {
-            if(Directory.Exists("output1"))
+            if (Directory.Exists("output1"))
             {
                 Directory.Delete("output1", true);
             }
-            Directory.CreateDirectory("output1");
             var grid = new Grid(1000, 1000);
             grid.Register("turn on", (state, start, end) =>
             {
@@ -53,7 +52,7 @@ namespace Day6
                 return state;
             });
             var frame = 1;
-            foreach(var line in File.ReadAllLines("Input.txt"))
+            foreach (var line in File.ReadAllLines("Input.txt"))
             {
                 Console.Write($"Processing frame {frame.ToString("00000")}\r");
                 var m = Regex.Match(line, @"^(?<command>.+) (?<from>.+?) through (?<to>.+?)$");
@@ -61,10 +60,11 @@ namespace Day6
                 var from = ParsePoint(m.Groups["from"].Value);
                 var to = ParsePoint(m.Groups["to"].Value);
                 grid.Raise(cmd, from, to);
-                grid.AsBitmap().Save($"output1\\frame{frame.ToString("00000")}.png", ImageFormat.Png);
+                //grid.AsBitmap().Save($"output1\\frame{frame.ToString("00000")}.png", ImageFormat.Png);
                 frame++;
             }
             Console.WriteLine();
+            Console.WriteLine(grid.Count(b => b > 0));
         }
 
         private static Point ParsePoint(string input)
@@ -90,6 +90,18 @@ namespace Day6
         private readonly int width;
         private readonly int height;
         private readonly Dictionary<string, Func<byte[,], Point, Point, byte[,]>> reducers = new Dictionary<string, Func<byte[,], Point, Point, byte[,]>>();
+        public int Count(Func<byte, bool> counter)
+        {
+            var count = 0;
+            for (var y = 0; y < height; y++)
+            {
+                for (var x = 0; x < width; x++)
+                {
+                    count += counter(grid[x, y]) ? 1 : 0;
+                }
+            }
+            return count;
+        }
         public Grid(int width, int height)
         {
             this.width = width;
