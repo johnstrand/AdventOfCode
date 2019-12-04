@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SFML.Graphics;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,37 +14,40 @@ namespace Day3
         private static void Main(string[] args)
         {
             var wires = File.ReadAllLines("input.txt");
-            foreach (var wire in wires)
+
+            using var window = new RenderWindow(new SFML.Window.VideoMode(800, 600), "Advent of Code");
+            using var dotTexture = new Texture("dot.png");
+            using var dot = new Sprite(dotTexture);
+            var view = window.DefaultView;
+            view.Move(new SFML.System.Vector2f(-400, -300));
+            window.SetView(view);
+            window.Closed += (s, e) => window.Close();
+            Task.Run(() =>
             {
-                Eval(wire.Split(',').ToList(), 0, 0);
-            }
+                foreach (var wire in wires)
+                {
+                    Eval(wire.Split(',').ToList(), 0, 0, dot);
+                }
 
-            var minx = nodeCount.Min(n => n.Key.X);
-            var miny = nodeCount.Min(n => n.Key.Y);
-            var maxx = nodeCount.Max(n => n.Key.X);
-            var maxy = nodeCount.Max(n => n.Key.Y);
-
-            /*
-            foreach (var item in nodeCount)
+                /*
+                var minx = nodeCount.Min(n => n.Key.X);
+                var miny = nodeCount.Min(n => n.Key.Y);
+                var maxx = nodeCount.Max(n => n.Key.X);
+                var maxy = nodeCount.Max(n => n.Key.Y);
+                */
+                var min = nodeCount.Keys.Where(n => nodeCount[n] > 1 && n != new Point(0, 0)).Min(n => Math.Abs(n.X) + Math.Abs(n.Y));
+                Console.WriteLine(min);
+            });
+            while (window.IsOpen)
             {
-                Console.SetCursorPosition(item.Key.X, maxy - item.Key.Y);
-                if (item.Value == 1)
-                {
-                    Console.Write("*");
-                }
-                else
-                {
-                    Console.Write("X");
-                }
+                //window.Clear();
+                window.DispatchEvents();
+                window.Draw(dot);
+                window.Display();
             }
-            */
-
-            //Console.SetCursorPosition(0, maxy + 1);
-            var min = nodeCount.Keys.Where(n => nodeCount[n] > 1 && n != new Point(0, 0)).Min(n => Math.Abs(n.X) + Math.Abs(n.Y));
-            Console.WriteLine(min);
         }
 
-        private static void Eval(List<string> instr, int x, int y)
+        private static void Eval(List<string> instr, int x, int y, Sprite dot)
         {
             if (!instr.Any())
             {
@@ -66,21 +70,27 @@ namespace Day3
 
             while (dist > -1)
             {
-                var key = new Point(x, y);
                 x += getOffset("x");
                 y += getOffset("y");
+
+                var key = new Point(x, y);
+                dot.Color = nodeCount.ContainsKey(key) ? Color.Red : Color.White;
+                dot.Position = new SFML.System.Vector2f(x, y);
                 if (nodeCount.ContainsKey(key))
                 {
                     nodeCount[key]++;
+                    Console.WriteLine(key);
                 }
                 else
                 {
                     nodeCount.Add(key, 1);
                 }
                 dist--;
+
+                Task.Delay(10).Wait();
             }
 
-            Eval(instr.Skip(1).ToList(), x, y);
+            Eval(instr.Skip(1).ToList(), x, y, dot);
         }
     }
 
