@@ -18,15 +18,17 @@ namespace Day3
             using var window = new RenderWindow(new SFML.Window.VideoMode(800, 600), "Advent of Code");
             using var dotTexture = new Texture("dot.png");
             using var dot = new Sprite(dotTexture);
+            dot.Scale = new SFML.System.Vector2f(10, 10);
             var view = window.DefaultView;
             view.Move(new SFML.System.Vector2f(-400, -300));
+            view.Zoom(3f);
             window.SetView(view);
             window.Closed += (s, e) => window.Close();
             Task.Run(() =>
             {
                 foreach (var wire in wires)
                 {
-                    Eval(wire.Split(',').ToList(), 0, 0, dot);
+                    Eval(wire.Split(',').ToList(), new Point(0, 0), dot);
                 }
 
                 /*
@@ -47,7 +49,7 @@ namespace Day3
             }
         }
 
-        private static void Eval(List<string> instr, int x, int y, Sprite dot)
+        private static void Eval(List<string> instr, Point pos, Sprite dot)
         {
             if (!instr.Any())
             {
@@ -58,39 +60,31 @@ namespace Day3
             var dir = cur[0];
             var dist = int.Parse(cur.Substring(1));
 
-            var getOffset = new Func<string, int>(axis =>
+            var vec = new Point(
+                dir == 'L' ? -1 : dir == 'R' ? 1 : 0,
+                dir == 'D' ? 1 : dir == 'U' ? -1 : 0
+                );
+
+            for (var _ = 0; _ < dist; _++)
             {
-                if ((axis == "y" && (dir == 'L' || dir == 'R')) || (axis == "x" && (dir == 'U' || dir == 'D')))
+                dot.Color = nodeCount.ContainsKey(pos) ? Color.Red : Color.White;
+                dot.Position = new SFML.System.Vector2f(pos.X, pos.Y);
+                if (nodeCount.ContainsKey(pos))
                 {
-                    return 0;
-                }
-
-                return (dir == 'L' || dir == 'D') ? -1 : 1;
-            });
-
-            while (dist > -1)
-            {
-                x += getOffset("x");
-                y += getOffset("y");
-
-                var key = new Point(x, y);
-                dot.Color = nodeCount.ContainsKey(key) ? Color.Red : Color.White;
-                dot.Position = new SFML.System.Vector2f(x, y);
-                if (nodeCount.ContainsKey(key))
-                {
-                    nodeCount[key]++;
-                    Console.WriteLine(key);
+                    nodeCount[pos]++;
+                    Console.WriteLine(pos);
+                    Console.WriteLine(Math.Abs(pos.X) + Math.Abs(pos.Y));
                 }
                 else
                 {
-                    nodeCount.Add(key, 1);
+                    nodeCount.Add(pos, 1);
                 }
-                dist--;
 
-                Task.Delay(10).Wait();
+                pos += vec;
             }
+            Task.Delay(10).Wait();
 
-            Eval(instr.Skip(1).ToList(), x, y, dot);
+            Eval(instr.Skip(1).ToList(), pos, dot);
         }
     }
 
@@ -108,6 +102,8 @@ namespace Day3
         public static bool operator ==(Point p1, Point p2) => p1.X == p2.X && p1.Y == p2.Y;
 
         public static bool operator !=(Point p1, Point p2) => p1.X != p2.X || p1.Y != p2.Y;
+
+        public static Point operator +(Point p1, Point p2) => new Point(p1.X + p2.X, p1.Y + p2.Y);
 
         public override bool Equals(object obj)
         {
