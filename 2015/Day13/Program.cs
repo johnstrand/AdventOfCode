@@ -7,6 +7,7 @@ var pairings = File.ReadAllLines("input.txt").Select(row => row.TrimEnd('.').Spl
 var participants = new HashSet<string>(pairings.Keys.Select(k => k.Split('_').First())).ToList();
 
 var part1 = 0;
+// TODO: Not done
 foreach (var setup in GetPermutations(participants))
 {
     var setupPoints = 0;
