@@ -18,6 +18,7 @@ var rules = new Dictionary<string, int>
     { "perfumes", 1},
 };
 
+// TODO: Part 2
 var part1 = 0;
 foreach (var row in File.ReadAllLines("input.txt"))
 {
