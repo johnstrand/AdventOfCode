@@ -6,30 +6,30 @@ using System.Text.RegularExpressions;
 
 namespace Day7
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main()
         {
             var pattern = "Step (?<resolver>.) must be finished before step (?<target>.) can begin.";
             var steps = new List<Step>();
-            foreach(var row in File.ReadAllLines("Input.txt"))
+            foreach (var row in File.ReadAllLines("input.txt"))
             {
                 var m = Regex.Match(row, pattern);
                 var resolver = m.Groups["resolver"].Value;
                 var target = m.Groups["target"].Value;
-                if(!steps.Any(t => t.Name == resolver))
+                if (!steps.Any(t => t.Name == resolver))
                 {
                     steps.Add(new Step { Name = resolver });
                 }
                 Step s;
-                if((s = steps.FirstOrDefault(t => t.Name == target)) == null)
+                if ((s = steps.FirstOrDefault(t => t.Name == target)) == null)
                 {
                     steps.Add(s = new Step { Name = target });
                 }
                 s.ResolvedBy.Add(resolver);
             }
 
-            while(steps.Any(s => !s.Resolved))
+            while (steps.Any(s => !s.Resolved))
             {
                 var next = steps
                     .Where(s => !s.ResolvedBy.Any() && !s.Resolved)
@@ -37,17 +37,15 @@ namespace Day7
 
                 Console.Write(next.Name);
                 next.Resolved = true;
-                foreach(var step in steps)
+                foreach (var step in steps)
                 {
                     step.ResolvedBy.Remove(next.Name);
                 }
             }
-            Console.WriteLine();
-            Console.Read();
         }
     }
 
-    class Step
+    internal class Step
     {
         public string Name { get; set; }
         public HashSet<string> ResolvedBy { get; set; } = new HashSet<string>();
