@@ -8,6 +8,7 @@ foreach (var line in File.ReadAllLines("input.txt"))
 {
     values.Add(int.Parse(line));
 }
+values.Sort();
 
 var skip = 0;
 
@@ -18,6 +19,10 @@ foreach (var v1 in values)
     skip++;
     foreach (var v2 in values.Skip(skip))
     {
+        if (v1 + v2 > 2020)
+        {
+            break;
+        }
         if (v1 + v2 == 2020)
         {
             Console.WriteLine($"Part 1: {v1 * v2}");
