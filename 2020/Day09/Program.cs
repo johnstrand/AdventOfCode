@@ -23,6 +23,10 @@ for (var i = 0; i < data.Count; i++)
     for (var ln = 1; ln < data.Count; ln++)
     {
         var range = data.Skip(i).Take(ln).ToList();
+        if (range.Distinct().Count() != range.Count)
+        {
+            continue;
+        }
         var sum = range.Sum();
         if (sum == target)
         {
@@ -42,7 +46,7 @@ bool MatchSum(long v, List<long> values)
     {
         for (var j = i + 1; j < values.Count; j++)
         {
-            if (values[i] + values[j] == v)
+            if (values[i] != values[j] && values[i] + values[j] == v)
             {
                 return true;
             }
