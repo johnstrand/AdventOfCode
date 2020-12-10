@@ -26,7 +26,6 @@ Console.WriteLine($"Part 2: {Search(0, target, rows)}");
 
 long Search(long current, long target, List<long> options)
 {
-    //Console.WriteLine($"{new string(' ', depth * 2)}{current}");
     if (current == target)
     {
         return 1;
