@@ -6,7 +6,6 @@ using System.Text.RegularExpressions;
 
 Dictionary<int, string> rules;
 
-// TODO: Part 2
 foreach (var part in new[] { 1, 2 })
 {
     rules = new Dictionary<int, string>();
@@ -29,7 +28,9 @@ foreach (var part in new[] { 1, 2 })
         rules[11] = "42 31 | 42 11 31";
     }
 
+    Console.Write("Generating regular expresssion...");
     var re = new Regex("^" + Render(0) + "$");
+    Console.WriteLine("done");
     var matching = 0;
     while (!reader.EndOfStream)
     {
@@ -42,8 +43,12 @@ foreach (var part in new[] { 1, 2 })
     Console.WriteLine($"Part {part}: {matching}");
 }
 
-string Render(int ruleId)
+string Render(int ruleId, int depth = 0)
 {
+    if (depth > 20)
+    {
+        return "";
+    }
     var rule = rules[ruleId];
     if (char.IsLetter(rule[0]))
     {
@@ -51,7 +56,7 @@ string Render(int ruleId)
     }
     return "(" + string.Join("|", rule.Split('|').Select(r => r.Trim()).Select(expr =>
     {
-        return string.Join("", expr.Split(' ').Select(int.Parse).Select(Render));
+        return string.Join("", expr.Split(' ').Select(int.Parse).Select(v => Render(v, depth + 1)));
     })) + ")";
 }
 
