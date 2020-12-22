@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 
 Dictionary<int, string> rules;
 
+// TODO: Rewrite without cheating
 foreach (var part in new[] { 1, 2 })
 {
     rules = new Dictionary<int, string>();
