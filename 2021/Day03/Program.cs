@@ -4,7 +4,7 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 
-var bits = ToBitArray(File.ReadAllLines("input-test.txt"), v => v > 0);
+var bits = ToBitArraySum(File.ReadAllLines("input-test.txt"), v => v > 0);
 var v1 = ToInt(bits);
 var v2 = ToInt(bits.Not());
 Console.WriteLine($"Part 1: {v1 * v2}");
@@ -12,12 +12,22 @@ Console.WriteLine($"Part 1: {v1 * v2}");
 var candidates = File.ReadAllLines("input-test.txt");
 
 
-void ApplyFilter(int bit, IEnumerable<string> candidate, Func<int, bool> condition)
+void ApplyFilter(int bit, IEnumerable<string> candidates, Func<int, bool> condition)
 {
 
 }
 
-BitArray ToBitArray(IEnumerable<string> input, Func<int, bool> condition)
+BitArray ToBitArray(string input)
+{
+    var arr = new BitArray(input.Length);
+    for (int digit = 0; digit < input.Length; digit++)
+    {
+        arr[digit] = input[digit] == '1';
+    }
+    return arr;
+}
+
+BitArray ToBitArraySum(IEnumerable<string> input, Func<int, bool> condition)
 {
     var digits = new List<int>();
     foreach (var row in input)
