@@ -261,20 +261,19 @@ internal class Cart
         {
             return true;
         }
-
-        if (c1.Facing == Direction.Up && c1.X == c2.X && c1.Y + 1 == c1.Y)
+        else if (c1.Facing == Direction.Up && c1.X == c2.X && c1.Y + 1 == c1.Y)
         {
             return true;
         }
-        if (c1.Facing == Direction.Down && c1.X == c2.X && c1.Y - 1 == c1.Y)
+        else if (c1.Facing == Direction.Down && c1.X == c2.X && c1.Y - 1 == c1.Y)
         {
             return true;
         }
-        if (c1.Facing == Direction.Left && c1.X + 1 == c2.X && c1.Y == c1.Y)
+        else if (c1.Facing == Direction.Left && c1.X + 1 == c2.X && c1.Y == c1.Y)
         {
             return true;
         }
-        if (c1.Facing == Direction.Right && c1.X - 1 == c2.X && c1.Y == c1.Y)
+        else if (c1.Facing == Direction.Right && c1.X - 1 == c2.X && c1.Y == c1.Y)
         {
             return true;
         }

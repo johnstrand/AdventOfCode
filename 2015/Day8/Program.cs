@@ -4,6 +4,7 @@ using System.Text;
 var part1 = 0;
 var part2 = 0;
 var t = Escape("\"\\x27\"");
+// TODO: clean this up
 foreach (var line in File.ReadAllLines("input.txt"))
 {
     var initial = line.Length;
@@ -31,14 +32,9 @@ static string Parse(string input)
         if (next == '\\')
         {
             var sigil = chars.Dequeue();
-            if (sigil == '\\' || sigil == '"')
-            {
-                next = sigil;
-            }
-            else
-            {
-                next = (char)int.Parse(chars.Dequeue().ToString() + chars.Dequeue().ToString(), NumberStyles.HexNumber);
-            }
+            next = sigil == '\\' || sigil == '"'
+                ? sigil
+                : (char)int.Parse(chars.Dequeue().ToString() + chars.Dequeue().ToString(), NumberStyles.HexNumber);
         }
         output.Append(next);
     }

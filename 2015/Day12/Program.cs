@@ -9,24 +9,24 @@ Console.WriteLine($"Part 1: {part1}, part 2: {part2}");
 
 int Sum(JsonElement element, bool skipRed)
 {
-    if (element.ValueKind == JsonValueKind.Object)
+    switch (element.ValueKind)
     {
-        if (skipRed && element.EnumerateObject().Any(p => p.Value.ValueKind == JsonValueKind.String && p.Value.GetString() == "red"))
-        {
+        case JsonValueKind.Object:
+            {
+                // TODO: Make all of this more readable
+                return skipRed && element.EnumerateObject().Any(p => p.Value.ValueKind == JsonValueKind.String && p.Value.GetString() == "red")
+                    ? 0
+                    : element.EnumerateObject().Sum(p => Sum(p.Value, skipRed));
+            }
+
+        case JsonValueKind.Array:
+            {
+                return element.EnumerateArray().Sum(e => Sum(e, skipRed));
+            }
+
+        case JsonValueKind.Number:
+            return element.GetInt32();
+        default:
             return 0;
-        }
-        return element.EnumerateObject().Sum(p => Sum(p.Value, skipRed));
-    }
-    else if (element.ValueKind == JsonValueKind.Array)
-    {
-        return element.EnumerateArray().Sum(e => Sum(e, skipRed));
-    }
-    else if (element.ValueKind == JsonValueKind.Number)
-    {
-        return element.GetInt32();
-    }
-    else
-    {
-        return 0;
     }
 }

@@ -1,4 +1,6 @@
-﻿using var reader = new StreamReader("input.txt");
+﻿using Day04;
+
+using var reader = new StreamReader("input.txt");
 var numbers = ReadNumbers(',');
 var boards = new List<Board>();
 while (!reader.EndOfStream)
@@ -40,58 +42,61 @@ List<int> ReadNumbers(char delim)
     return reader.ReadLine()!.Split(new[] { delim }, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList();
 }
 
-public class Board
+namespace Day04
 {
-    private readonly List<int> state = new();
-    private bool hasWon;
-
-    public void LoadRow(IEnumerable<int> items)
+    public class Board
     {
-        state.AddRange(items);
-    }
+        private readonly List<int> _state = new();
+        private bool _hasWon;
 
-    public int GetChecksum(int number)
-    {
-        return state.Sum() * number;
-    }
-
-    public bool Play(int number)
-    {
-        var index = state.IndexOf(number);
-        if (index == -1)
+        public void LoadRow(IEnumerable<int> items)
         {
+            _state.AddRange(items);
+        }
+
+        public int GetChecksum(int number)
+        {
+            return _state.Sum() * number;
+        }
+
+        public bool Play(int number)
+        {
+            var index = _state.IndexOf(number);
+            if (index == -1)
+            {
+                return false;
+            }
+
+            _state[index] = 0;
+
+            return true;
+        }
+
+        public bool HasWon()
+        {
+            if (_hasWon)
+            {
+                return _hasWon;
+            }
+
+            for (var i = 0; i < 5; i++)
+            {
+                if (Range(i, 5, 5).All(ix => _state[ix] == 0))
+                {
+                    return _hasWon = true;
+                }
+                if (Range(i * 5, 5, 1).All(ix => _state[ix] == 0))
+                {
+                    return _hasWon = true;
+                }
+            }
+
             return false;
         }
 
-        state[index] = 0;
-
-        return true;
-    }
-
-    public bool HasWon()
-    {
-        if (hasWon)
+        private static IEnumerable<int> Range(int start, int count, int step)
         {
-            return hasWon;
+            return Enumerable.Range(0, count).Select(n => start + (n * step));
         }
-
-        for (var i = 0; i < 5; i++)
-        {
-            if (Range(i, 5, 5).All(ix => state[ix] == 0))
-            {
-                return hasWon = true;
-            }
-            if (Range(i * 5, 5, 1).All(ix => state[ix] == 0))
-            {
-                return hasWon = true;
-            }
-        }
-
-        return false;
-    }
-
-    private static IEnumerable<int> Range(int start, int count, int step)
-    {
-        return Enumerable.Range(0, count).Select(n => start + (n * step));
     }
 }

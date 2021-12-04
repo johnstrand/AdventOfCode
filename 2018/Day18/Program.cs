@@ -62,21 +62,13 @@ char Map(char value, char[] surrounding)
             s.Add(c, 1);
         }
     }*/
-    if (value == '.')
+    return value switch
     {
-        return HasTwo(surrounding, '|') ? '|' : '.';
-    }
-
-    if (value == '|')
-    {
-        return HasTwo(surrounding, '#') ? '#' : '|';
-    }
-
-    if (value == '#')
-    {
-        return BothOf(surrounding, '#', '|') ? '#' : '.';
-    }
-    return value;
+        '.' => HasTwo(surrounding, '|') ? '|' : '.',
+        '|' => HasTwo(surrounding, '#') ? '#' : '|',
+        '#' => BothOf(surrounding, '#', '|') ? '#' : '.',
+        _ => value
+    };
 }
 
 bool BothOf(char[] list, char c1, char c2)

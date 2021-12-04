@@ -21,7 +21,7 @@ void Round(Player player, Boss boss, int spent, bool part2, List<string> log)
 {
     foreach (var effect in effects)
     {
-        var _log = log.ToList();
+        var logInstance = log.ToList();
         if (effect.Value > player.Mana)
         {
             continue;
@@ -50,7 +50,7 @@ void Round(Player player, Boss boss, int spent, bool part2, List<string> log)
         var b = boss.Clone();
 
         // Player turn
-        _log.Add($"-- Player turn, player: {p}, boss: {b} --");
+        logInstance.Add($"-- Player turn, player: {p}, boss: {b} --");
         if (part2)
         {
             p.Health--;
@@ -59,14 +59,14 @@ void Round(Player player, Boss boss, int spent, bool part2, List<string> log)
                 continue;
             }
         }
-        ApplyEffects(p, b, _log);
+        ApplyEffects(p, b, logInstance);
 
         if (b.Health <= 0)
         {
             if (cost < min)
             {
                 min = spent + effect.Value;
-                _log.Add($"Boss died, mana spent: {min}");
+                logInstance.Add($"Boss died, mana spent: {min}");
             }
             continue;
         }
@@ -74,43 +74,43 @@ void Round(Player player, Boss boss, int spent, bool part2, List<string> log)
         if (effect.Key == "magic")
         {
             b.Health -= 4;
-            _log.Add($"Player casts magic missiles, boss health is now {b.Health}");
+            logInstance.Add($"Player casts magic missiles, boss health is now {b.Health}");
         }
         else if (effect.Key == "drain")
         {
             b.Health -= 2;
             p.Health += 2;
-            _log.Add($"Player casts drain, player health is now {p.Health} and boss health is now {b.Health}");
+            logInstance.Add($"Player casts drain, player health is now {p.Health} and boss health is now {b.Health}");
         }
         else if (effect.Key == "shield")
         {
             p.Shield = 6;
-            _log.Add("Player casts shield");
+            logInstance.Add("Player casts shield");
         }
         else if (effect.Key == "poison")
         {
             b.Poison = 6;
-            _log.Add("Player casts poison");
+            logInstance.Add("Player casts poison");
         }
         else if (effect.Key == "recharge")
         {
             p.Recharge = 5;
-            _log.Add("Player casts recharge");
+            logInstance.Add("Player casts recharge");
         }
 
         p.Mana -= effect.Value;
 
         // Boss turn
-        _log.Add($"-- Boss turn, player: {p}, boss: {b} --");
+        logInstance.Add($"-- Boss turn, player: {p}, boss: {b} --");
 
-        ApplyEffects(p, b, _log);
+        ApplyEffects(p, b, logInstance);
 
         if (b.Health <= 0)
         {
             if (cost < min)
             {
                 min = spent + effect.Value;
-                _log.Add($"Boss died, mana spent: {min}");
+                logInstance.Add($"Boss died, mana spent: {min}");
             }
             continue;
         }
@@ -122,9 +122,9 @@ void Round(Player player, Boss boss, int spent, bool part2, List<string> log)
             continue;
         }
 
-        _log.Add($"Player health is now {p.Health}");
+        logInstance.Add($"Player health is now {p.Health}");
 
-        Round(p, b, spent + effect.Value, part2, _log);
+        Round(p, b, spent + effect.Value, part2, logInstance);
     }
 }
 

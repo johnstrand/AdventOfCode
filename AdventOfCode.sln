@@ -155,6 +155,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "2021.04", "2021\Day04\2021.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "2021.03", "2021\Day03\2021.03.csproj", "{7E286FFF-3E29-4A06-9EC2-F5663054FB38}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "2016.04", "2016\Day04\2016.04.csproj", "{FC760E91-1003-42DD-A0BA-6FDE3D747A79}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B2CDD80A-B3CC-48CD-A808-CFA784F8D04C}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -437,6 +444,10 @@ Global
 		{7E286FFF-3E29-4A06-9EC2-F5663054FB38}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E286FFF-3E29-4A06-9EC2-F5663054FB38}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E286FFF-3E29-4A06-9EC2-F5663054FB38}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC760E91-1003-42DD-A0BA-6FDE3D747A79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC760E91-1003-42DD-A0BA-6FDE3D747A79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC760E91-1003-42DD-A0BA-6FDE3D747A79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC760E91-1003-42DD-A0BA-6FDE3D747A79}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -511,6 +522,7 @@ Global
 		{EEA56E34-ABB0-43BB-9B3B-9806C18A1B1C} = {299CAC79-8BC7-4D83-A3EB-2FEC35DE195B}
 		{A3BE483B-BF3A-4699-BA15-FF09EEDCE371} = {299CAC79-8BC7-4D83-A3EB-2FEC35DE195B}
 		{7E286FFF-3E29-4A06-9EC2-F5663054FB38} = {299CAC79-8BC7-4D83-A3EB-2FEC35DE195B}
+		{FC760E91-1003-42DD-A0BA-6FDE3D747A79} = {1A399658-A113-45A9-A511-07CF19A35F71}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C1964976-33CE-4B60-8E70-E8F7F80723CA}

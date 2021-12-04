@@ -35,31 +35,31 @@ namespace Day03
 
     internal class Consumer
     {
-        private readonly Pos pos = new() { X = 0, Y = 0 };
+        private readonly Pos _pos = new() { X = 0, Y = 0 };
         public (int x, int y) Move(char ch)
         {
             if (ch == '^')
             {
-                pos.Y++;
+                _pos.Y++;
             }
             else if (ch == '>')
             {
-                pos.X++;
+                _pos.X++;
             }
             else if (ch == 'v')
             {
-                pos.Y--;
+                _pos.Y--;
             }
             else if (ch == '<')
             {
-                pos.X--;
+                _pos.X--;
             }
             else
             {
                 throw new Exception();
             }
 
-            return (pos.X, pos.Y);
+            return (_pos.X, _pos.Y);
         }
     }
 

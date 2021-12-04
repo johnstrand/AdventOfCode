@@ -1,6 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 var pos = (x: 0, y: 0);
+
 foreach (var line in File.ReadAllLines("input.txt"))
 {
     var parts = line.Split(' ');

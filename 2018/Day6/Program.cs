@@ -10,13 +10,7 @@ var points = GetPoints();
 var bounded = new HashSet<string>(points.Where(p => IsBounded(p, points)).Select(p => p.Name));
 
 var bounds = points.Aggregate<NamedPoint, Bounds>(null, (acc, cur) =>
-{
-    if (acc == null)
-    {
-        return new Bounds(cur.X, cur.Y, cur.X, cur.Y);
-    }
-    return acc.Modify(cur);
-});
+    acc == null ? new Bounds(cur.X, cur.Y, cur.X, cur.Y) : acc.Modify(cur));
 
 var img = new Bitmap(bounds.X2 - bounds.X1 + 1, bounds.Y2 - bounds.Y1 + 1);
 var img2 = new Bitmap(bounds.X2 - bounds.X1 + 1, bounds.Y2 - bounds.Y1 + 1);

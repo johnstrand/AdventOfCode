@@ -3,6 +3,8 @@ using System.Linq;
 
 //var input = new[] { "939", "7,13,x,x,59,x,31,19" };
 
+// TODO: This doesn't seem right
+
 var input = new[] { "1007268", "17,x,x,x,x,x,x,41,x,x,x,x,x,x,x,x,x,937,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,13,x,x,x,x,23,x,x,x,x,x,29,x,397,x,x,x,x,x,37,x,x,x,x,x,x,x,x,x,x,x,x,19" };
 
 var currentTime = int.Parse(input[0]);
@@ -39,13 +41,13 @@ while (missing < rules.Count)
 
 Console.WriteLine($"Part 2: {t}");
 
-var largest = rules.First(r => r.value == rules.Max(r => r.value));
+var (value, offset) = rules.First(r => r.value == rules.Max(r => r.value));
 
 var s = 0L;
 while (true)
 {
-    s += largest.value;
-    if (s + largest.offset == 626670513163231)
+    s += value;
+    if (s + offset == 626670513163231)
     {
     }
 }

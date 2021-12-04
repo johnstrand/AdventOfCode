@@ -9,13 +9,13 @@ if (-not $year) {
 }
 
 $_day = if ($day) {
-    $day = $day.ToString("00")
+    $day.ToString("00")
 }
 else {
     (Get-Date).ToString("dd")
 }
 
-Read-Host "Scaffolding $year/$_day, press enter to continue or ctrl+c to cancel"
+Read-Host "Scaffolding $year/Day$_day, press enter to continue or ctrl+c to cancel"
 
 if (-not (Test-Path $year)) {
     Write-Host "Creating $year directory"

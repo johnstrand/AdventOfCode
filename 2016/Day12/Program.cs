@@ -13,12 +13,7 @@
 
     int ValueOf(string token)
     {
-        if (char.IsLetter(token[0]))
-        {
-            return registers[token[0]];
-        }
-
-        return int.Parse(token);
+        return char.IsLetter(token[0]) ? registers[token[0]] : int.Parse(token);
     }
 
     while (ptr < instr.Count)
