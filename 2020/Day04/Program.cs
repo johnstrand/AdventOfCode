@@ -12,7 +12,7 @@ var part2 = 0;
 while (data.Count > 0)
 {
     var next = data.Dequeue();
-    if (next == string.Empty)
+    if (next?.Length == 0)
     {
         if (Valid1(passport))
         {
@@ -57,10 +57,9 @@ bool Valid2(Dictionary<string, string> passport)
         TryValidate(passport, "iyr", v => int.TryParse(v, out var y) && y >= 2010 && y <= 2020) &&
         TryValidate(passport, "eyr", v => int.TryParse(v, out var y) && y >= 2020 && y <= 2030) &&
         TryValidate(passport, "hgt", ValidHeight) &&
-        TryValidate(passport, "hcl", v => Regex.IsMatch(v, @"^#[0-9a-f]{6}$")) &&
+        TryValidate(passport, "hcl", v => Regex.IsMatch(v, "^#[0-9a-f]{6}$")) &&
         TryValidate(passport, "ecl", ValidColor) &&
         TryValidate(passport, "pid", v => v.Length == 9 && v.All(char.IsDigit));
-
 }
 
 bool ValidHeight(string h)

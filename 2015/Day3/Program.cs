@@ -1,65 +1,56 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using Day03;
 
-namespace Day3
+var stack = new Queue<char>(File.ReadAllText("Input.txt").ToArray());
+
+var consumerCount = 1;
+
+var consumers = Enumerable.Range(0, consumerCount).Select(_ => new Consumer()).ToList();
+
+var history = new HashSet<(int x, int y)>
 {
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            var stack = new Queue<char>(File.ReadAllText("Input.txt").ToArray());
+    (0, 0)
+};
 
-            var consumerCount = 1;
+while (stack.Count > 0)
+{
+    history.AddRange(consumers.Select(c => c.Move(stack.Dequeue())));
+}
 
-            var consumers = Enumerable.Range(0, consumerCount).Select(n => new Consumer()).ToList();
+Console.WriteLine(history.Count);
 
-            var history = new HashSet<(int x, int y)>
-            {
-                (0, 0)
-            };
+Console.ReadLine();
 
-            while (stack.Any())
-            {
-                history.AddRange(consumers.Select(c => c.Move(stack.Dequeue())));
-            }
-
-            Console.WriteLine(history.Count);
-
-            Console.ReadLine();
-        }
-    }
-
-    static class Extensions
+namespace Day03
+{
+    internal static class Extensions
     {
         public static void AddRange<T>(this HashSet<T> set, IEnumerable<T> values)
         {
-            foreach(var value in values)
+            foreach (var value in values)
             {
                 set.Add(value);
             }
         }
     }
 
-    class Consumer
+    internal class Consumer
     {
-        readonly Pos pos = new Pos { X = 0, Y = 0 };
+        private readonly Pos pos = new() { X = 0, Y = 0 };
         public (int x, int y) Move(char ch)
         {
-            if(ch == '^')
+            if (ch == '^')
             {
                 pos.Y++;
             }
-            else if(ch == '>')
+            else if (ch == '>')
             {
                 pos.X++;
             }
-            else if(ch == 'v')
+            else if (ch == 'v')
             {
                 pos.Y--;
             }
-            else if(ch == '<')
+            else if (ch == '<')
             {
                 pos.X--;
             }
@@ -72,14 +63,14 @@ namespace Day3
         }
     }
 
-    class Pos
+    internal class Pos
     {
         public int X { get; set; }
         public int Y { get; set; }
 
         public override int GetHashCode()
         {
-            return $"{X}x{Y}".GetHashCode(); 
+            return $"{X}x{Y}".GetHashCode();
         }
     }
 }

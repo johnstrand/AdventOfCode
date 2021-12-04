@@ -8,7 +8,7 @@ while (!reader.EndOfStream)
     boards.Add(new Board());
     for (var i = 0; i < 5; i++)
     {
-        boards[boards.Count - 1].LoadRow(ReadNumbers(' '));
+        boards[^1].LoadRow(ReadNumbers(' '));
     }
 }
 
@@ -90,8 +90,8 @@ public class Board
         return false;
     }
 
-    private IEnumerable<int> Range(int start, int count, int step)
+    private static IEnumerable<int> Range(int start, int count, int step)
     {
-        return Enumerable.Range(0, count).Select(n => start + n * step);
+        return Enumerable.Range(0, count).Select(n => start + (n * step));
     }
 }

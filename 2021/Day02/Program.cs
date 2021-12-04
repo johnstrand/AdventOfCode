@@ -30,7 +30,7 @@ foreach (var line in File.ReadAllLines("input.txt"))
 
     state = dir switch
     {
-        "forward" => (state.x + dist, state.y + state.aim * dist, state.aim),
+        "forward" => (state.x + dist, state.y + (state.aim * dist), state.aim),
         "down" => (state.x, state.y, state.aim + dist),
         "up" => (state.x, state.y, state.aim - dist),
         _ => state

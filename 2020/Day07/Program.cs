@@ -38,7 +38,7 @@ Console.WriteLine($"Part 2: {Count("shiny gold")}");
 
 int Count(string name)
 {
-    return rules[name].Sum(r => r.count + r.count * Count(r.name));
+    return rules[name].Sum(r => r.count + (r.count * Count(r.name)));
 }
 
 bool CanContain(string name, List<(string name, int count)> rule)

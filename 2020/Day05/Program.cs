@@ -13,7 +13,7 @@ Console.WriteLine($"Part 2: {part2 + 1}");
 
 int Index((int row, int col) seat)
 {
-    return seat.row * 8 + seat.col;
+    return (seat.row * 8) + seat.col;
 }
 
 (int row, int col) GetSeat(string seq)

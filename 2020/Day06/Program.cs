@@ -9,7 +9,7 @@ var part2 = 0;
 var groupCount = 0;
 foreach (var row in File.ReadAllLines("input.txt"))
 {
-    if (row == string.Empty)
+    if (row?.Length == 0)
     {
         part1 += currentGroup.Count;
         part2 += currentGroup.Values.Count(v => v == groupCount);

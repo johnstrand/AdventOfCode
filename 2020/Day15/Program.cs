@@ -17,13 +17,13 @@ foreach (var limit in new[] { 10, 2020, 30000000 })
 
     for (var turn = 1; turn <= limit; turn++)
     {
-        if (init.Any())
+        if (init.Count > 0)
         {
             seq.Add(init.Dequeue());
             seen[seq.Last()] = new List<int> { turn };
             continue;
         }
-        var last = seq[seq.Count - 1];
+        var last = seq[^1];
         if (seen[last].Count == 1)
         {
             seen[0].Add(turn);
@@ -32,7 +32,7 @@ foreach (var limit in new[] { 10, 2020, 30000000 })
         else
         {
             var rounds = seen[last];
-            var value = rounds[rounds.Count - 1] - rounds[rounds.Count - 2];
+            var value = rounds[^1] - rounds[^2];
 
             if (!seen.ContainsKey(value))
             {

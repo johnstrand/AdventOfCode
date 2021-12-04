@@ -5,14 +5,14 @@ using System.Linq;
 
 var input = new[] { "1007268", "17,x,x,x,x,x,x,41,x,x,x,x,x,x,x,x,x,937,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,13,x,x,x,x,23,x,x,x,x,x,29,x,397,x,x,x,x,x,37,x,x,x,x,x,x,x,x,x,x,x,x,19" };
 
-var currentTime = int.Parse(input.First());
+var currentTime = int.Parse(input[0]);
 
 var times = input.Last().Split(',').Where(IsNumber).Select(int.Parse).ToList();
 
 var ts = currentTime;
 while (true)
 {
-    var num = times.FirstOrDefault(t => ts % t == 0);
+    var num = times.Find(t => ts % t == 0);
     if (num > 0)
     {
         Console.WriteLine($"Part 1: {num * (ts - currentTime)}");
@@ -24,7 +24,7 @@ while (true)
 var t = 0L;
 var rules = input.Last().Split(',').Select((n, i) => n == "x" ? (-1, -1) : (value: long.Parse(n), offset: i)).Where(x => x.value != -1).ToList();
 var missing = 1;
-var multiplier = rules.First().value;
+var multiplier = rules[0].value;
 
 while (missing < rules.Count)
 {
@@ -50,7 +50,7 @@ while (true)
     }
 }
 
-bool IsNumber(string str)
+static bool IsNumber(string str)
 {
     return str.All(char.IsDigit);
 }

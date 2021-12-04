@@ -28,7 +28,7 @@ foreach (var index in indices)
     }
 }
 
-int Run(List<(string op, int offset)> instr, out bool exited)
+static int Run(List<(string op, int offset)> instr, out bool exited)
 {
     var seen = new HashSet<int>();
     var ptr = 0;

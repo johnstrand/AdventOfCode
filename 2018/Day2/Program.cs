@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-
-var two = 0;
+﻿var two = 0;
 var three = 0;
 var candidates = new List<string>();
 foreach (var row in File.ReadAllLines("input.txt"))

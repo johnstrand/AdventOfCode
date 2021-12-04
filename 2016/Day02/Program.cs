@@ -1,8 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-
-var steps = File.ReadAllLines("input.txt").SelectMany(row => row + "E").ToList();
+﻿var steps = File.ReadAllLines("input.txt").SelectMany(row => row + "E").ToList();
 var grid1 = new[] { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 
 var grid2 = new[]
@@ -43,7 +39,7 @@ foreach (var step in steps)
 }
 Console.WriteLine();
 
-class Pos
+internal class Pos
 {
     private int x;
     private int y;
@@ -68,7 +64,7 @@ class Pos
         {
             return;
         }
-        if (grid[ny * w + nx] == ' ')
+        if (grid[(ny * w) + nx] == ' ')
         {
             return;
         }
@@ -78,6 +74,6 @@ class Pos
 
     public char Push()
     {
-        return grid[y * w + x];
+        return grid[(y * w) + x];
     }
 }

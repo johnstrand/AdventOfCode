@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 var pattern = @"(\w+): (\d+)-(\d+) or (\d+)-(\d+)";
 var rules = new Dictionary<string, List<int>>();
@@ -19,7 +15,6 @@ while (!string.IsNullOrWhiteSpace(row = reader.ReadLine()))
         int.Parse(match.Groups[5].Value),
     };
 }
-
 
 // Skip header
 reader.ReadLine();
@@ -64,7 +59,7 @@ while (!reader.EndOfStream)
 
 Console.WriteLine($"Part 1: {checksum}");
 
-bool InRange(int v, List<int> ranges)
+static bool InRange(int v, List<int> ranges)
 {
     return (v >= ranges[0] && v <= ranges[1]) || (v >= ranges[2] && v <= ranges[3]);
 }

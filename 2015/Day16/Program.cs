@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 var rules = new Dictionary<string, int>
 {
@@ -22,7 +18,7 @@ var rules = new Dictionary<string, int>
 var part1 = 0;
 foreach (var row in File.ReadAllLines("input.txt"))
 {
-    var check = Regex.Match(row, @"(.+?): (.+)");
+    var check = Regex.Match(row, "(.+?): (.+)");
     var name = check.Groups[1].Value;
     var values = check.Groups[2].Value.Split(',').Select(v => v.Split(':')).ToDictionary(kv => kv[0].Trim(), kv => int.Parse(kv[1].Trim()));
     var rulesCount = values.Count(kv => rules[kv.Key] == kv.Value);

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
+﻿using System.Drawing;
 
 var pos = new Point(0, 0);
 var facing = 0;
@@ -23,7 +19,7 @@ foreach (var command in File.ReadAllText("input.txt").Split(',').Select(c => c.T
         }
     }
 
-    var dist = int.Parse(command.Substring(1));
+    var dist = int.Parse(command[1..]);
     for (var step = 0; step < dist; step++)
     {
         pos.Offset(

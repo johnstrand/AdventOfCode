@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-
-var raindeer = new List<Raindeer>();
+﻿var raindeer = new List<Raindeer>();
 
 foreach (var row in File.ReadAllLines("input.txt").Select(r => r.Split(' ')))
 {

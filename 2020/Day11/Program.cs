@@ -1,8 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-
-foreach (var part1 in new[] { true, false })
+﻿foreach (var part1 in new[] { true, false })
 {
     var field = File.ReadAllLines("input.txt").Select(r => r.ToArray()).ToArray();
     var w = field[0].Length;
@@ -19,17 +15,17 @@ foreach (var part1 in new[] { true, false })
             {
                 var state = GetState(x, y, field);
                 var neighbors = part1 ? Neighbors(x, y, field) : Neighbors2(x, y, field);
-                var changed = new bool?();
+                //var changed = new bool?();
                 if (state == 'L' && neighbors == 0)
                 {
                     next[y][x] = '#';
-                    changed = true;
+                    //changed = true;
                     anyChanged = true;
                 }
                 else if (state == '#' && neighbors >= (part1 ? 4 : 5))
                 {
                     next[y][x] = 'L';
-                    changed = false;
+                    //changed = false;
                     anyChanged = true;
                 }
                 /*
@@ -52,7 +48,6 @@ foreach (var part1 in new[] { true, false })
 
     Console.WriteLine($"Part {(part1 ? 1 : 2)}: {CountOccupied(field)}");
 }
-
 
 char[][] Copy(char[][] field)
 {

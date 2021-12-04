@@ -1,63 +1,51 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿// TODO: Also not complete
 using System.Text;
 
-namespace Day12
+var sm = StateMachine.Parse(File.ReadAllText("Input.txt"));
+while (sm.Gen() < 21)
 {
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            var sm = StateMachine.Parse(File.ReadAllText("Input.txt"));
-            while (sm.Gen() < 21)
-            {
-                Console.WriteLine(sm.Get());
-                sm.Next();
-            }
-            Console.Read();
-        }
-    }
+    Console.WriteLine(sm.Get());
+    sm.Next();
+}
+Console.Read();
 
-    class StateMachine
+internal class StateMachine
+{
+    private readonly Dictionary<string, string> rules = new();
+    private string state;
+    private int gen;
+    public int Gen() => gen;
+    public string Get() => $"[{gen}] {state}";
+    public void Next()
     {
-        readonly Dictionary<string, string> rules = new Dictionary<string, string>();
-        string state;
-        int gen;
-        public int Gen() => gen;
-        public string Get() => $"[{gen}] {state}";
-        public void Next()
+        gen++;
+        var newState = new StringBuilder();
+        for (var i = 0; i < state.Length - 4; i++)
         {
-            gen++;
-            var newState = new StringBuilder();
-            for (var i = 0; i < state.Length - 4; i++)
+            var seg = state.Substring(i, 5);
+            if (rules.ContainsKey(seg))
             {
-                var seg = state.Substring(i, 5);
-                if (rules.ContainsKey(seg))
-                {
-                    newState.Append(rules[seg]);
-                }
-                else
-                {
-                    newState.Append(".");
-                }
+                newState.Append(rules[seg]);
             }
-            state = $"...{newState.ToString().Trim('.')}...";
+            else
+            {
+                newState.Append('.');
+            }
         }
-        public static StateMachine Parse(string data)
+        state = $"...{newState.ToString().Trim('.')}...";
+    }
+    public static StateMachine Parse(string data)
+    {
+        var sm = new StateMachine();
+        var reader = new StringReader(data);
+        sm.state = $"...{reader.ReadLine().Split(':').Last().Trim()}...";
+        reader.ReadLine();
+        string rule;
+        while (!string.IsNullOrWhiteSpace(rule = reader.ReadLine()))
         {
-            var sm = new StateMachine();
-            var reader = new StringReader(data);
-            sm.state = $"...{reader.ReadLine().Split(':').Last().Trim()}...";
-            reader.ReadLine();
-            string rule;
-            while (!string.IsNullOrWhiteSpace(rule = reader.ReadLine()))
-            {
-                var ruleSeg = rule.Split("=>").Select(seg => seg.Trim());
-                sm.rules.Add(ruleSeg.First(), ruleSeg.Last());
-            }
-            return sm;
+            var ruleSeg = rule.Split("=>").Select(seg => seg.Trim());
+            sm.rules.Add(ruleSeg.First(), ruleSeg.Last());
         }
+        return sm;
     }
 }

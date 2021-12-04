@@ -1,42 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
+﻿// TODO: Also not complete
 using System.Drawing;
-using System.IO;
-using System.Linq;
 
-namespace Day17
+var points = GetPoints().ToList();
+var offset = points.Min(p => p.X);
+
+foreach (var point in points)
 {
-    internal class Program
+    Console.SetCursorPosition(point.X - offset, point.Y);
+    Console.Write('#');
+}
+Console.SetCursorPosition(500 - offset, 0);
+Console.Write("+");
+Console.Read();
+
+static IEnumerable<Point> GetPoints()
+{
+    foreach (var row in File.ReadAllLines("Input.txt"))
     {
-        private static void Main(string[] args)
-        {
-            var points = GetPoints().ToList();
-            var offset = points.Select(p => p.X).Min();
-            foreach(var point in points)
-            {
-                Console.SetCursorPosition(point.X - offset, point.Y);
-                Console.Write('#');
-            }
-            Console.SetCursorPosition(500 - offset, 0);
-            Console.Write("+");
-            Console.Read();
-        }
+        var parts = row.Split(',').ToDictionary(
+            x => x.Split('=')[0].Trim(),
+            x => x.Split('=').Last().Trim().Split("..").Select(int.Parse).ToList());
 
-        private static IEnumerable<Point> GetPoints()
+        for (var y = parts["y"].Min(); y <= parts["y"].Max(); y++)
         {
-            foreach (var row in File.ReadAllLines("Input.txt"))
+            for (var x = parts["x"].Min(); x <= parts["x"].Max(); x++)
             {
-                var parts = row.Split(',').ToDictionary(
-                    x => x.Split('=').First().Trim(),
-                    x => x.Split('=').Last().Trim().Split("..").Select(int.Parse).ToList());
-
-                for (var y = parts["y"].Min(); y <= parts["y"].Max(); y++)
-                {
-                    for (var x = parts["x"].Min(); x <= parts["x"].Max(); x++)
-                    {
-                        yield return new Point(x, y);
-                    }
-                }
+                yield return new Point(x, y);
             }
         }
     }

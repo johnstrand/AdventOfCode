@@ -1,54 +1,64 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿long target;
+var combos = new List<HashSet<long>>();
 
-namespace Day24
+Console.WriteLine("Reading data");
+var values = File.ReadAllLines("input.txt").Select(long.Parse).ToList();
+Console.WriteLine("Calculating target");
+target = values.Sum() / 3;
+Console.WriteLine($"Target set to {target}");
+
+Console.WriteLine("Generating groups based on target");
+CreateGroups(values, target, new List<long>());
+Console.WriteLine($"Generated {combos.Count} groups");
+
+Console.WriteLine("Finding smallest group");
+var min = combos.Min(c => c.Count);
+Console.WriteLine($"Smallest group set to {min}");
+
+Console.WriteLine("Calculating entanglement");
+var qe = combos.Where(c => c.Count == min).Min(Multiply);
+
+Console.WriteLine($"Part 1: {qe}");
+
+Console.WriteLine("Calculating target");
+target = values.Sum() / 4;
+Console.WriteLine($"Target set to {target}");
+
+combos.Clear();
+
+Console.WriteLine("Generating groups based on target");
+CreateGroups(values, target, new List<long>());
+Console.WriteLine($"Generated {combos.Count} groups");
+
+Console.WriteLine("Finding smallest group");
+min = combos.Min(c => c.Count);
+Console.WriteLine($"Smallest group set to {min}");
+
+Console.WriteLine("Calculating entanglement");
+qe = combos.Where(c => c.Count == min).Min(Multiply);
+
+Console.WriteLine($"Part 2: {qe}");
+
+long Multiply(HashSet<long> values)
 {
-    internal class Program
+    var res = values.Aggregate(1L, (acc, cur) => acc * cur);
+    return res;
+}
+
+void CreateGroups(List<long> numbers, long sum, List<long> combo)
+{
+    if (sum == 0)
     {
-        private static long target;
-        private static readonly List<HashSet<long>> combos = new List<HashSet<long>>();
+        combos.Add(new HashSet<long>(combo));
+        return;
+    }
+    if (sum < 0)
+    {
+        return;
+    }
 
-        private static void Main()
-        {
-            var values = File.ReadAllLines("input.txt").Select(long.Parse).ToList();
-            target = values.Sum() / 3;
-            CreateGroups(values, target, new List<long>());
-            var min = combos.Min(c => c.Count);
-            var qe = combos.Where(c => c.Count == min).Select(Multiply).Min();
-            Console.WriteLine($"Part 1: {qe}");
-
-            target = values.Sum() / 4;
-            combos.Clear();
-            CreateGroups(values, target, new List<long>());
-            min = combos.Min(c => c.Count);
-            qe = combos.Where(c => c.Count == min).Select(Multiply).Min();
-            Console.WriteLine($"Part 2: {qe}");
-        }
-
-        private static long Multiply(HashSet<long> values)
-        {
-            var res = values.Aggregate(1L, (acc, cur) => acc * cur);
-            return res;
-        }
-
-        private static void CreateGroups(List<long> numbers, long sum, List<long> combo)
-        {
-            if (sum == 0)
-            {
-                combos.Add(new HashSet<long>(combo));
-                return;
-            }
-            if (sum < 0)
-            {
-                return;
-            }
-
-            foreach (var number in numbers)
-            {
-                CreateGroups(numbers.Where(n => n > number).ToList(), sum - number, combo.Append(number).ToList());
-            }
-        }
+    foreach (var number in numbers)
+    {
+        CreateGroups(numbers.Where(n => n > number).ToList(), sum - number, combo.Append(number).ToList());
     }
 }

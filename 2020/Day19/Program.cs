@@ -55,9 +55,6 @@ string Render(int ruleId, int depth = 0)
     {
         return rule[0].ToString();
     }
-    return "(" + string.Join("|", rule.Split('|').Select(r => r.Trim()).Select(expr =>
-    {
-        return string.Join("", expr.Split(' ').Select(int.Parse).Select(v => Render(v, depth + 1)));
-    })) + ")";
+    return "(" + string.Join("|", rule.Split('|').Select(r => r.Trim()).Select(expr => string.Concat(expr.Split(' ').Select(int.Parse).Select(v => Render(v, depth + 1))))) + ")";
 }
 

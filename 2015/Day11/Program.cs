@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-var password = new List<char> { 'h', 'x', 'b', 'x', 'w', 'x', 'b', 'a' };
+﻿var password = new List<char> { 'h', 'x', 'b', 'x', 'w', 'x', 'b', 'a' };
 var matches = 0;
 while (matches < 2)
 {

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-
-var seen = new HashSet<int>();
+﻿var seen = new HashSet<int>();
 var seed = 0;
 var running = true;
 var first = true;

@@ -1,8 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-
-var sum = 0;
+﻿var sum = 0;
 foreach (var row in File.ReadAllLines("input.txt"))
 {
     var tri = row.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).OrderBy(x => x).ToList();

@@ -11,10 +11,8 @@ Console.WriteLine($"Part 1: {v1 * v2}");
 
 var candidates = File.ReadAllLines("input-test.txt");
 
-
 void ApplyFilter(int bit, IEnumerable<string> candidates, Func<int, bool> condition)
 {
-
 }
 
 BitArray ToBitArray(string input)

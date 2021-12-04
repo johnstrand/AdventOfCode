@@ -51,7 +51,7 @@ foreach (var row in File.ReadAllLines("input.txt"))
                     return c;
                 }
 
-                var v = bitList.First();
+                var v = bitList[0];
                 bitList.RemoveAt(0);
                 return v;
             })));

@@ -17,8 +17,8 @@ foreach (var line in File.ReadAllLines("input.txt"))
     {
         var distance = int.Parse(line[1..]);
         Console.Write($"Ship moved from {Math.Abs(ship.X)} {(ship.X >= 0 ? "E" : "W")}, {Math.Abs(ship.Y)} {(ship.Y >= 0 ? "N" : "S")} to ");
-        ship.X = ship.X + (wp.X * distance);
-        ship.Y = ship.Y + (wp.Y * distance);
+        ship.X += (wp.X * distance);
+        ship.Y += (wp.Y * distance);
         Console.WriteLine($"{Math.Abs(ship.X)} {(ship.X >= 0 ? "E" : "W")}, {Math.Abs(ship.Y)} {(ship.Y >= 0 ? "N" : "S")}");
     }
     else

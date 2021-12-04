@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-
-foreach (var part1 in new[] { true, false })
+﻿foreach (var part1 in new[] { true, false })
 {
     var registers = new Dictionary<char, int>
-{
-    { 'a', 0 },
-    { 'b', 0 },
-    { 'c', part1 ? 0 : 1 },
-    { 'd', 0 },
-};
+    {
+        { 'a', 0 },
+        { 'b', 0 },
+        { 'c', part1 ? 0 : 1 },
+        { 'd', 0 },
+    };
 
     var instr = File.ReadAllLines("input.txt").Select(r => r.Split(' ')).ToList();
     var ptr = 0;

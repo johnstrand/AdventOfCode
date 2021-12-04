@@ -1,39 +1,28 @@
-﻿using System;
-using System.Linq;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace Day4
+var md5 = MD5.Create();
+var input = "bgvyzdsv";
+var prefixLength = 6;
+var prefix = string.Concat(Enumerable.Repeat("0", prefixLength));
+var pos = 0;
+
+while (true)
 {
-    class Program
+    var hashString = md5.ComputeHash($"{input}{++pos}");
+    if (hashString.StartsWith(prefix))
     {
-        static void Main(string[] args)
-        {
-            var md5 = MD5.Create();
-            var input = "bgvyzdsv";
-            var prefixLength = 6;
-            var prefix = string.Join("", Enumerable.Repeat("0", prefixLength));
-            var pos = 0;
-
-            while(true)
-            {
-                var hashString = md5.ComputeHash($"{input}{++pos}");
-                if(hashString.StartsWith(prefix))
-                {
-                    Console.WriteLine(pos);
-                    break;
-                }
-            }
-
-            Console.ReadLine();
-        }
+        Console.WriteLine(pos);
+        break;
     }
+}
 
-    static class Extension
+Console.ReadLine();
+
+internal static class Extension
+{
+    public static string ComputeHash(this MD5 crypto, string input)
     {
-        public static string ComputeHash(this MD5 crypto, string input)
-        {
-            return string.Join("", crypto.ComputeHash(Encoding.UTF8.GetBytes(input)).Select(b => b.ToString("x2")));
-        }
+        return string.Concat(crypto.ComputeHash(Encoding.UTF8.GetBytes(input)).Select(b => b.ToString("x2")));
     }
 }

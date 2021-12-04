@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-var rows = File.ReadAllLines(@"input.txt");
+var rows = File.ReadAllLines("input.txt");
 var steppings = new[]
 {
     (dx: 1, dy: 1),

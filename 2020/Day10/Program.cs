@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-Dictionary<long, long> paths = new Dictionary<long, long>();
+Dictionary<long, long> paths = new();
 
 var rows = File.ReadAllLines("input.txt").Select(long.Parse).ToList();
 rows.Add(0);
@@ -22,7 +22,6 @@ Console.WriteLine($"Part 1: {diffs[1] * diffs[3]}");
 var target = rows.Max();
 
 Console.WriteLine($"Part 2: {Search(0, target, rows)}");
-
 
 long Search(long current, long target, List<long> options)
 {

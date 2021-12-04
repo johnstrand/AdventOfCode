@@ -40,7 +40,7 @@ for (var i = 0; i < data.Count; i++)
     }
 }
 
-bool MatchSum(long v, List<long> values)
+static bool MatchSum(long v, List<long> values)
 {
     for (var i = 0; i < values.Count - 1; i++)
     {

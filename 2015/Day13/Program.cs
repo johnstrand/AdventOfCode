@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿var pairings = File.ReadAllLines("input.txt")
+    .Select(row => row.TrimEnd('.')
+        .Split(' '))
+    .ToDictionary(
+        r => $"{r[0]}_{r.Last()}",
+        r => int.Parse(r[3]) * (r[2] == "gain" ? 1 : -1));
 
-var pairings = File.ReadAllLines("input.txt").Select(row => row.TrimEnd('.').Split(' ')).ToDictionary(r => $"{r.First()}_{r.Last()}", r => int.Parse(r[3]) * (r[2] == "gain" ? 1 : -1));
-var participants = new HashSet<string>(pairings.Keys.Select(k => k.Split('_').First())).ToList();
+var participants = new HashSet<string>(pairings.Keys.Select(k => k.Split('_')[0])).ToList();
 
 var part1 = 0;
 // TODO: Not done

@@ -22,7 +22,7 @@ while (!reader.EndOfStream)
     fields.Add(new Field(title, data));
 }
 
-class Field
+internal class Field
 {
     private readonly string name;
     private readonly List<string> data;
@@ -41,8 +41,8 @@ class Field
     {
         yield return data[0];
         yield return Reverse(data[0]);
-        yield return data[data.Count - 1];
-        yield return Reverse(data[data.Count - 1]);
+        yield return data[^1];
+        yield return Reverse(data[^1]);
 
         var leftEdge = new string(data.Select(r => r[0]).ToArray());
         var rightEdge = new string(data.Select(r => r[width]).ToArray());
@@ -53,11 +53,11 @@ class Field
         yield return Reverse(rightEdge);
     }
 
-    private string Reverse(string data)
+    private static string Reverse(string data)
     {
         return new string(data.Reverse().ToArray());
     }
-    private List<int> CreateRotationMatrix(int size)
+    private static List<int> CreateRotationMatrix(int size)
     {
         var root = (int)Math.Sqrt(size);
         var matrix = new List<int>();
@@ -71,5 +71,4 @@ class Field
 
         return matrix;
     }
-
 }
