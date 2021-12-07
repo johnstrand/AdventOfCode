@@ -1,42 +1,29 @@
-﻿var fishList = new List<List<int>>
-{
-    File.ReadAllText("input-test.txt").Split(',').Select(int.Parse).ToList()
-};
+﻿using System.Collections.Concurrent;
 
-var prev = 0;
-for (var day = 0; day < 256; day++)
+var fishes = File.ReadAllText("input.txt").Split(',').Select(int.Parse).ToList();
+
+ConcurrentDictionary<int, long> cache = new();
+
+long GetCount(int start, int age, int max)
 {
-    var limit = fishList.Count;
-    for (var schoolIndex = 0; schoolIndex < fishList.Count; schoolIndex++)
+    var firstSpawn = start + age + 1;
+    return cache.GetOrAdd(firstSpawn, _ =>
     {
-        var fish = fishList[schoolIndex];
-        var newSpawn = 0;
-        for (var index = 0; index < fish.Count; index++)
-        {
-            fish[index]--;
-            if (fish[index] == -1)
-            {
-                fish[index] = 6;
-                newSpawn++;
-            }
-        }
-        if (newSpawn > 0)
-        {
-            var newFish = Enumerable.Repeat(8, newSpawn).ToList();
-            if (schoolIndex + 1 == fishList.Count)
-            {
-                fishList.Add(newFish);
-            }
-            else
-            {
-                fishList[schoolIndex + 1].AddRange(newFish);
-            }
-        }
-    }
+        var sum = 1L;
 
-    var current = fishList.Sum(school => school.Count);
-    Console.WriteLine($"Day {day + 1}: {current} (+{current - prev})");
-    prev = current;
+        for (var nextSpawn = firstSpawn; nextSpawn <= max; nextSpawn += 7)
+        {
+            sum += GetCount(nextSpawn, 8, max);
+        }
+
+        return sum;
+    });
 }
 
-//Console.WriteLine(string.Join(", ", fish));
+
+foreach (var limit in new[] { 80, 256 })
+{
+    cache.Clear();
+    var count = fishes.Select(n => GetCount(0, n, limit)).Sum();
+    Console.WriteLine($"Limit: {limit} = {count}");
+}
