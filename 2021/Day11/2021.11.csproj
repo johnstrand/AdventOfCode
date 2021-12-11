@@ -6,6 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\AoC.Common\AoC.Common.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <None Update="input-test.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
