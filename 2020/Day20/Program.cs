@@ -1,7 +1,7 @@
-﻿// See https://aka.ms/new-console-template for more information
-using var reader = new StreamReader("test.txt");
+﻿using var reader = new StreamReader("test.txt");
 
 var fields = new List<Field>();
+
 while (!reader.EndOfStream)
 {
     var title = reader.ReadLine();
@@ -19,7 +19,27 @@ while (!reader.EndOfStream)
         }
         data.Add(row);
     }
-    fields.Add(new Field(title, data));
+    var matrix = Field.CreateRotationMatrix(data.Sum(s => s.Length));
+    for (var i = 0; i < 4; i++)
+    {
+        fields.Add(new Field(title, data).Dump());
+        Console.WriteLine();
+        data = Field.Rotate(data, matrix);
+    }
+    data = Field.Flip(data);
+    for (var i = 0; i < 4; i++)
+    {
+        fields.Add(new Field(title, data).Dump());
+        Console.WriteLine();
+        data = Field.Rotate(data, matrix);
+    }
+}
+
+var gridSize = (int)Math.Sqrt(fields.Count / 8);
+
+void Place(int x, int y, List<string> placed)
+{
+
 }
 
 internal class Field
@@ -27,37 +47,33 @@ internal class Field
     private readonly string name;
     private readonly List<string> data;
     private readonly int width;
-    private readonly List<int> matrix;
+
+    public string Top => data[0];
+    public string Bottom => data[^1];
+    public string Left => new(data.Select(r => r[0]).ToArray());
+    public string Right => new(data.Select(r => r[width - 1]).ToArray());
+
 
     public Field(string name, List<string> data)
     {
         this.name = name;
         this.data = data;
-        width = data[0].Length - 1;
-        matrix = CreateRotationMatrix(width * width);
+        width = data[0].Length;
     }
 
-    public IEnumerable<string> Edges()
+    public Field Dump()
     {
-        yield return data[0];
-        yield return Reverse(data[0]);
-        yield return data[^1];
-        yield return Reverse(data[^1]);
-
-        var leftEdge = new string(data.Select(r => r[0]).ToArray());
-        var rightEdge = new string(data.Select(r => r[width]).ToArray());
-
-        yield return leftEdge;
-        yield return Reverse(leftEdge);
-        yield return rightEdge;
-        yield return Reverse(rightEdge);
+        Console.WriteLine(name);
+        Console.WriteLine(string.Join(Environment.NewLine, data));
+        return this;
     }
 
     private static string Reverse(string data)
     {
         return new string(data.Reverse().ToArray());
     }
-    private static List<int> CreateRotationMatrix(int size)
+
+    public static List<int> CreateRotationMatrix(int size)
     {
         var root = (int)Math.Sqrt(size);
         var matrix = new List<int>();
@@ -70,5 +86,28 @@ internal class Field
         }
 
         return matrix;
+    }
+
+    public static List<string> Flip(List<string> data)
+    {
+        return data.ConvertAll(Reverse);
+    }
+
+    public static List<string> Rotate(List<string> data, List<int> matrix)
+    {
+        var _t = data.SelectMany(r => r.ToArray()).ToList();
+        var rotated = Enumerable.Repeat(' ', _t.Count).ToList();
+        for (var index = 0; index < _t.Count; index++)
+        {
+            rotated[index] = _t[matrix[index]];
+        }
+
+        var size = data[0].Length;
+        var final = new List<string>();
+        for (var offset = 0; offset < rotated.Count; offset += size)
+        {
+            final.Add(new string(rotated.Skip(offset).Take(size).ToArray()));
+        }
+        return final;
     }
 }
