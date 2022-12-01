@@ -2,7 +2,11 @@
 using System.Drawing;
 
 var input = File.ReadAllText("Input.txt");
+
+var reader = new RoomReader(input);
+
 var grid = Grid.Parse(input);
+
 using (var draw = new ImageDraw((grid.Width * 10) + 5, (grid.Height * 10) + 5))
 {
     while (!grid.Draw(draw))
@@ -12,10 +16,158 @@ using (var draw = new ImageDraw((grid.Width * 10) + 5, (grid.Height * 10) + 5))
     }
 }
 
+class RoomReader
+{
+    private readonly List<char> data = new();
+    private readonly int w;
+    private readonly int h;
+    private readonly Dictionary<(int x, int y), Room> roomCache = new();
+
+    public RoomReader(string input)
+    {
+        data = new List<char>();
+        using var reader = new StringReader(input);
+        string row;
+        while (!string.IsNullOrEmpty(row = reader.ReadLine()))
+        {
+            w = row.Length;
+            h++;
+            data.AddRange(row);
+        }
+
+        var start = data.FindIndex(c => c != ' ');
+        var x = start % w;
+        var y = start / h;
+        Discover(x, y);
+    }
+
+    private Room Discover(int x, int y)
+    {
+        var key = (x, y);
+
+        if (roomCache.TryGetValue(key, out var room))
+        {
+            return room;
+        }
+
+        room = roomCache[key] = new(x, y);
+
+        var index = y * w + h;
+        var c = data[index];
+
+        if (c == '/')
+        {
+            if (HasBlock(x, y, 0, 1, '|'))
+            {
+                room.Bottom = Discover(x, y + 1);
+                room.Right = Discover(x + 1, y);
+            }
+            else
+            {
+                room.Top = Discover(x, y - 1);
+                room.Left = Discover(x - 1, y);
+            }
+        }
+        else if (c == '\\')
+        {
+            if (HasBlock(x, y, 0, 1, '|'))
+            {
+                room.Bottom = Discover(x, y + 1);
+                room.Left = Discover(x - 1, y);
+            }
+            else
+            {
+                room.Top = Discover(x, y - 1);
+                room.Right = Discover(x + 1, y);
+            }
+        }
+        else if (c == '-')
+        {
+            room.Left = Discover(x - 1, y);
+            room.Right = Discover(x + 1, y);
+        }
+        else if (c == '|')
+        {
+            room.Top = Discover(x, y - 1);
+            room.Bottom = Discover(x, y + 1);
+        }
+        else if (c == '+')
+        {
+            room.Left = Discover(x - 1, y);
+            room.Right = Discover(x + 1, y);
+            room.Top = Discover(x, y - 1);
+            room.Bottom = Discover(x, y + 1);
+        }
+        else
+        {
+            if (HasBlock(x, y, 0, -1, '/', '\\', '|', '+'))
+            {
+                room.Top = Discover(x, y - 1);
+            }
+
+            if (HasBlock(x, y, 0, 1, '/', '\\', '|', '+'))
+            {
+                room.Bottom = Discover(x, y + 1);
+            }
+
+            if (HasBlock(x, y, -1, 0, '/', '\\', '-', '+'))
+            {
+                room.Left = Discover(x - 1, y);
+            }
+
+            if (HasBlock(x, y, 1, 0, '/', '\\', '-', '+'))
+            {
+                room.Right = Discover(x + 1, y);
+            }
+
+        }
+
+        return room;
+    }
+
+    private bool HasBlock(int x, int y, int dx, int dy, params char[] block)
+    {
+        var (sx, sy) = (x + dx, y + dy);
+
+        return IsInBounds(sx, sy) && block.Contains(data[sy * w + sx]);
+    }
+
+    private bool IsInBounds(int x, int y)
+    {
+        return x >= 0 && y >= 0 && x < w && y < h;
+    }
+}
+
+class Room
+{
+    public int X { get; }
+    public int Y { get; }
+
+    public Room Top { get; set; }
+    public Room Bottom { get; set; }
+    public Room Left { get; set; }
+    public Room Right { get; set; }
+
+    public Room(int x, int y)
+    {
+        X = x;
+        Y = y;
+    }
+}
+
+[Flags]
+enum Connections
+{
+    Top = 1,
+    Right = 2,
+    Bottom = 4,
+    Left = 8
+}
+
+
 internal interface IDrawable
 {
     void Plot(int x, int y, char c);
-    void Plot(int x, int y, string str);
 }
 
 internal class ImageDraw : IDrawable, IDisposable
@@ -24,7 +176,7 @@ internal class ImageDraw : IDrawable, IDisposable
     private Bitmap _img;
     private Graphics _g;
     private readonly AnimatedGif.AnimatedGifCreator gif;
-    private readonly Font font = new("FiraCode", 15);
+
     public ImageDraw(int w, int h)
     {
         _img = new Bitmap(w, h);
@@ -47,14 +199,69 @@ internal class ImageDraw : IDrawable, IDisposable
     }
     public void Plot(int x, int y, char c)
     {
-        Plot(x, y, c.ToString());
+        if (c == '/')
+        {
+            _g.DrawLine(Pens.White, BottomLeft(x, y), TopRight(x, y));
+        }
+        else if (c == '\\')
+        {
+            _g.DrawLine(Pens.White, TopLeft(x, y), BottomRight(x, y));
+        }
+        else if (c == '-')
+        {
+            _g.DrawLine(Pens.White, Left(x, y), Right(x, y));
+        }
+        else if (c == '|')
+        {
+            _g.DrawLine(Pens.White, TopCenter(x, y), BottomCenter(x, y));
+        }
+        else if (c == '+')
+        {
+            _g.DrawLine(Pens.White, Left(x, y), Right(x, y));
+            _g.DrawLine(Pens.White, TopCenter(x, y), BottomCenter(x, y));
+        }
+        else if (c == '>')
+        {
+            _g.DrawLine(Pens.Red, TopLeft(x, y), Right(x, y));
+            _g.DrawLine(Pens.Red, BottomLeft(x, y), Right(x, y));
+        }
+        else if (c == '<')
+        {
+            _g.DrawLine(Pens.Red, Left(x, y), TopRight(x, y));
+            _g.DrawLine(Pens.Red, Left(x, y), BottomRight(x, y));
+        }
+        else if (c == 'v')
+        {
+            _g.DrawLine(Pens.Red, TopLeft(x, y), BottomCenter(x, y));
+            _g.DrawLine(Pens.Red, TopRight(x, y), BottomCenter(x, y));
+        }
+        else if (c == '^')
+        {
+            _g.DrawLine(Pens.Red, BottomRight(x, y), TopCenter(x, y));
+            _g.DrawLine(Pens.Red, BottomLeft(x, y), TopCenter(x, y));
+        }
+        else if (c == 'X')
+        {
+            _g.DrawLine(Pens.Red, BottomRight(x, y), TopLeft(x, y));
+            _g.DrawLine(Pens.Red, BottomLeft(x, y), TopRight(x, y));
+        }
     }
 
-    public void Plot(int x, int y, string str)
-    {
-        var size = _g.MeasureString(str, font);
-        _g.DrawString(str, font, Brushes.White, (x * 10) - (size.Width / 2) + 2, y * 10);
-    }
+    const int cellSize = 10;
+    const int halfCell = cellSize / 2;
+
+    private Point TopLeft(int x, int y) => new(x * cellSize, y * cellSize);
+    private Point TopCenter(int x, int y) => new(x * cellSize + halfCell, y * cellSize);
+    private Point TopRight(int x, int y) => new(x * cellSize + cellSize - 1, y * cellSize);
+
+    private Point Left(int x, int y) => new(x * cellSize, y * cellSize + halfCell);
+    private Point Center(int x, int y) => new(x * cellSize + halfCell, y * cellSize + halfCell);
+    private Point Right(int x, int y) => new(x * cellSize + cellSize - 1, y * cellSize + halfCell);
+
+    private Point BottomLeft(int x, int y) => new(x * cellSize, y * cellSize + cellSize - 1);
+    private Point BottomCenter(int x, int y) => new(x * cellSize + halfCell, y * cellSize + cellSize - 1);
+    private Point BottomRight(int x, int y) => new(x * cellSize + cellSize - 1, y * cellSize + cellSize - 1);
+
 
     public void Dispose()
     {
