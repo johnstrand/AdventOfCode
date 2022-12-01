@@ -3,7 +3,7 @@ using System.Drawing;
 
 var input = File.ReadAllText("Input.txt");
 
-var reader = new RoomReader(input);
+var reader = new Board(input);
 
 var grid = Grid.Parse(input);
 
@@ -16,154 +16,190 @@ using (var draw = new ImageDraw((grid.Width * 10) + 5, (grid.Height * 10) + 5))
     }
 }
 
-class RoomReader
+internal class Mover
 {
-    private readonly List<char> data = new();
-    private readonly int w;
-    private readonly int h;
-    private readonly Dictionary<(int x, int y), Room> roomCache = new();
+    public int X { get; set; }
+    public int Y { get; set; }
+    public Direction Dir { get; set; }
 
-    public RoomReader(string input)
+    private Turn nextTurn = Turn.Left;
+
+    public Mover(int x, int y, Direction dir)
     {
-        data = new List<char>();
-        using var reader = new StringReader(input);
-        string row;
-        while (!string.IsNullOrEmpty(row = reader.ReadLine()))
-        {
-            w = row.Length;
-            h++;
-            data.AddRange(row);
-        }
-
-        var start = data.FindIndex(c => c != ' ');
-        var x = start % w;
-        var y = start / h;
-        Discover(x, y);
+        X = x;
+        Y = y;
+        Dir = dir;
     }
 
-    private Room Discover(int x, int y)
+    public void Tick()
     {
-        var key = (x, y);
 
-        if (roomCache.TryGetValue(key, out var room))
+    }
+}
+
+internal class Board
+{
+    private readonly int _w;
+    private readonly int _h;
+    private readonly Dictionary<(int x, int y), char> _data = new();
+    private readonly Dictionary<(int x, int y), Room> _rooms = new();
+    private readonly List<Mover> _movers = new();
+
+    public Room GetRoom(int x, int y)
+    {
+        return _rooms[(x, y)];
+    }
+
+    public Board(string input)
+    {
+        using var reader = new StringReader(input);
+        string row;
+        for (var y = 0; !string.IsNullOrEmpty(row = reader.ReadLine()); y++)
         {
-            return room;
+            _w = row.Length;
+            _h++;
+            for (var x = 0; x < row.Length; x++)
+            {
+                var c = row[x];
+                if (c == ' ')
+                {
+                    continue;
+                }
+
+                _data[(x, y)] = c;
+            }
         }
 
-        room = roomCache[key] = new(x, y);
-
-        var index = y * w + h;
-        var c = data[index];
-
-        if (c == '/')
+        foreach (var node in _data)
         {
-            if (HasBlock(x, y, 0, 1, '|'))
+            var (x, y) = node.Key;
+            var c = node.Value;
+            var connections = Connections.None;
+
+            if (c == '/')
             {
-                room.Bottom = Discover(x, y + 1);
-                room.Right = Discover(x + 1, y);
+                if (HasBlock(x, y, 0, 1, '|'))
+                {
+                    connections |= Connections.Right | Connections.Bottom;
+                }
+                else
+                {
+                    connections |= Connections.Top | Connections.Left;
+                }
+            }
+            else if (c == '\\')
+            {
+                if (HasBlock(x, y, 0, 1, '|'))
+                {
+                    connections |= Connections.Bottom | Connections.Left;
+                }
+                else
+                {
+                    connections |= Connections.Top | Connections.Right;
+                }
+            }
+            else if (c == '-')
+            {
+                connections |= Connections.Left | Connections.Right;
+            }
+            else if (c == '|')
+            {
+                connections |= Connections.Top | Connections.Bottom;
+            }
+            else if (c == '+')
+            {
+                connections |= Connections.All;
             }
             else
             {
-                room.Top = Discover(x, y - 1);
-                room.Left = Discover(x - 1, y);
-            }
-        }
-        else if (c == '\\')
-        {
-            if (HasBlock(x, y, 0, 1, '|'))
-            {
-                room.Bottom = Discover(x, y + 1);
-                room.Left = Discover(x - 1, y);
-            }
-            else
-            {
-                room.Top = Discover(x, y - 1);
-                room.Right = Discover(x + 1, y);
-            }
-        }
-        else if (c == '-')
-        {
-            room.Left = Discover(x - 1, y);
-            room.Right = Discover(x + 1, y);
-        }
-        else if (c == '|')
-        {
-            room.Top = Discover(x, y - 1);
-            room.Bottom = Discover(x, y + 1);
-        }
-        else if (c == '+')
-        {
-            room.Left = Discover(x - 1, y);
-            room.Right = Discover(x + 1, y);
-            room.Top = Discover(x, y - 1);
-            room.Bottom = Discover(x, y + 1);
-        }
-        else
-        {
-            if (HasBlock(x, y, 0, -1, '/', '\\', '|', '+'))
-            {
-                room.Top = Discover(x, y - 1);
+                var dir = c switch
+                {
+                    '>' => Direction.Right,
+                    '<' => Direction.Left,
+                    '^' => Direction.Up,
+                    _ => Direction.Down
+                };
+
+                _movers.Add(new(x, y, dir));
+
+                if (HasBlock(x, y, 0, -1, '/', '\\', '|', '+'))
+                {
+                    connections |= Connections.Top;
+                }
+
+                if (HasBlock(x, y, 0, 1, '/', '\\', '|', '+'))
+                {
+                    connections |= Connections.Bottom;
+                }
+
+                if (HasBlock(x, y, -1, 0, '/', '\\', '-', '+'))
+                {
+                    connections |= Connections.Left;
+                }
+
+                if (HasBlock(x, y, 1, 0, '/', '\\', '-', '+'))
+                {
+                    connections |= Connections.Right;
+                }
             }
 
-            if (HasBlock(x, y, 0, 1, '/', '\\', '|', '+'))
-            {
-                room.Bottom = Discover(x, y + 1);
-            }
-
-            if (HasBlock(x, y, -1, 0, '/', '\\', '-', '+'))
-            {
-                room.Left = Discover(x - 1, y);
-            }
-
-            if (HasBlock(x, y, 1, 0, '/', '\\', '-', '+'))
-            {
-                room.Right = Discover(x + 1, y);
-            }
-
+            _rooms[node.Key] = new(x, y, connections);
         }
-
-        return room;
     }
 
     private bool HasBlock(int x, int y, int dx, int dy, params char[] block)
     {
         var (sx, sy) = (x + dx, y + dy);
 
-        return IsInBounds(sx, sy) && block.Contains(data[sy * w + sx]);
+        return IsInBounds(sx, sy) && _data.ContainsKey((sx, sy)) && block.Contains(_data[(sx, sy)]);
     }
 
     private bool IsInBounds(int x, int y)
     {
-        return x >= 0 && y >= 0 && x < w && y < h;
+        return x >= 0 && y >= 0 && x < _w && y < _h;
     }
 }
 
-class Room
+internal class Room
 {
     public int X { get; }
     public int Y { get; }
 
-    public Room Top { get; set; }
-    public Room Bottom { get; set; }
-    public Room Left { get; set; }
-    public Room Right { get; set; }
+    public Connections Connections { get; }
 
-    public Room(int x, int y)
+    public Room(int x, int y, Connections connections)
     {
         X = x;
         Y = y;
+        Connections = connections;
     }
 }
 
-[Flags]
-enum Connections
+internal enum Turn
 {
-    Top = 1,
-    Right = 2,
-    Bottom = 4,
-    Left = 8
+    Left,
+    Straight,
+    Right
 }
 
+internal enum Direction
+{
+    Up,
+    Down,
+    Left,
+    Right
+}
+
+[Flags]
+internal enum Connections
+{
+    None = 0,
+    Top = 1,
+    Right = 1 << 1,
+    Bottom = 1 << 2,
+    Left = 1 << 3,
+    All = Top | Right | Bottom | Left
+}
 
 internal interface IDrawable
 {
@@ -247,8 +283,8 @@ internal class ImageDraw : IDrawable, IDisposable
         }
     }
 
-    const int cellSize = 10;
-    const int halfCell = cellSize / 2;
+    private const int cellSize = 10;
+    private const int halfCell = cellSize / 2;
 
     private Point TopLeft(int x, int y) => new(x * cellSize, y * cellSize);
     private Point TopCenter(int x, int y) => new(x * cellSize + halfCell, y * cellSize);
