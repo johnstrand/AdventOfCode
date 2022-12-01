@@ -3,11 +3,10 @@ using System.Drawing;
 
 var input = File.ReadAllText("Input.txt");
 var grid = Grid.Parse(input);
-using (var draw = new ImageDraw((grid.Width * 5) + 5, (grid.Height * 5) + 5))
+using (var draw = new ImageDraw((grid.Width * 10) + 5, (grid.Height * 10) + 5))
 {
-    while (true)
+    while (!grid.Draw(draw))
     {
-        grid.Draw(draw);
         draw.Recycle();
         //Thread.Sleep(100);
     }
@@ -22,29 +21,29 @@ internal interface IDrawable
 internal class ImageDraw : IDrawable, IDisposable
 {
     //private readonly int index;
-    private Bitmap img;
-    private Graphics g;
+    private Bitmap _img;
+    private Graphics _g;
     private readonly AnimatedGif.AnimatedGifCreator gif;
-    private readonly Font font = new("FiraCode", 10);
+    private readonly Font font = new("FiraCode", 15);
     public ImageDraw(int w, int h)
     {
-        img = new Bitmap(w, h);
-        g = Graphics.FromImage(img);
-        g.FillRectangle(Brushes.Black, new Rectangle(new Point(0, 0), img.Size));
+        _img = new Bitmap(w, h);
+        _g = Graphics.FromImage(_img);
+        _g.FillRectangle(Brushes.Black, new Rectangle(new Point(0, 0), _img.Size));
         gif = AnimatedGif.AnimatedGif.Create(@"c:\temp\output\2018.13.gif", 100, 0);
     }
 
     public void Recycle()
     {
-        gif.AddFrame(img);
+        gif.AddFrame(_img);
         //img.Save($@"c:\temp\output\{(index++).ToString("00000")}.png", ImageFormat.Png);
-        var w = img.Width;
-        var h = img.Height;
-        g.Dispose();
-        img.Dispose();
-        img = new Bitmap(w, h);
-        g = Graphics.FromImage(img);
-        g.FillRectangle(Brushes.Black, new Rectangle(new Point(0, 0), img.Size));
+        var w = _img.Width;
+        var h = _img.Height;
+        _g.Dispose();
+        _img.Dispose();
+        _img = new Bitmap(w, h);
+        _g = Graphics.FromImage(_img);
+        _g.FillRectangle(Brushes.Black, new Rectangle(new Point(0, 0), _img.Size));
     }
     public void Plot(int x, int y, char c)
     {
@@ -53,16 +52,16 @@ internal class ImageDraw : IDrawable, IDisposable
 
     public void Plot(int x, int y, string str)
     {
-        var size = g.MeasureString(str, font);
-        g.DrawString(str, font, Brushes.White, (x * 5) - (size.Width / 2) + 2, y * 5);
+        var size = _g.MeasureString(str, font);
+        _g.DrawString(str, font, Brushes.White, (x * 10) - (size.Width / 2) + 2, y * 10);
     }
 
     public void Dispose()
     {
         //img.Save($@"c:\temp\output\{(index++).ToString("00000")}.png", ImageFormat.Png);
-        gif.AddFrame(img);
-        g.Dispose();
-        img.Dispose();
+        gif.AddFrame(_img);
+        _g.Dispose();
+        _img.Dispose();
     }
 }
 
@@ -74,7 +73,8 @@ internal class Grid
     public Dictionary<(int x, int y), Cell> Cells { get; set; } = new Dictionary<(int x, int y), Cell>();
 
     private readonly HashSet<(int x, int y)> crashMarkers = new();
-    public void Draw(IDrawable draw)
+
+    public bool Draw(IDrawable draw)
     {
         foreach (var cell in Cells.Values)
         {
@@ -103,6 +103,11 @@ internal class Grid
                 }
             }
         }
+
+        foreach (var (x, y) in crashMarkers)
+        {
+            draw.Plot(x, y, 'X');
+        }
         //var collided = Carts.Where(c => !c.Crashed).GroupBy(c => (c.X, c.Y)).Where(g => g.Count() > 1);
 
         /*if(collided.Any())
@@ -122,7 +127,10 @@ internal class Grid
         }*/
         if (Carts.Count(c => !c.Crashed) == 1)
         {
+            return true;
         }
+
+        return false;
     }
     public static Grid Parse(string input)
     {
