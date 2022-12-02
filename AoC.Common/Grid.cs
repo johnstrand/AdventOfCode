@@ -11,10 +11,13 @@ namespace AoC.Common
         public int Width { get; }
         public int Height { get; }
 
+        public int Count { get; }
+
         public Grid(int width, int height)
         {
             Width = width;
             Height = height;
+            Count = width * height;
             _items.AddRange(Enumerable.Repeat<T?>(default, width * height));
         }
 
@@ -22,6 +25,7 @@ namespace AoC.Common
         {
             Width = width;
             Height = height;
+            Count = width * height;
             _items.AddRange(items);
         }
 
@@ -34,11 +38,17 @@ namespace AoC.Common
                 Width = mappedItems.Count;
                 _items.AddRange(mappedItems);
             }
+            Count = Width * Height;
         }
 
         public T? GetValue(int x, int y)
         {
             return _items[GetIndex(x, y)];
+        }
+
+        public T? SetValue(int x, int y, Func<T?, T?> modifier)
+        {
+            return _items[GetIndex(x, y)] = modifier(_items[GetIndex(x, y)]);
         }
 
         public T? SetValue(int x, int y, T? value)
@@ -49,6 +59,34 @@ namespace AoC.Common
         public bool IsValid(int x, int y)
         {
             return x >= 0 && y >= 0 && x < Width && y < Height;
+        }
+
+        public IEnumerable<(int x, int y)> GetMatching(Func<T?, bool> predicate)
+        {
+            for (var index = 0; index < _items.Count; index++)
+            {
+                if (predicate(_items[index]))
+                {
+                    var x = index % Width;
+                    var y = index / Width;
+
+                    yield return (x, y);
+                }
+            }
+        }
+
+        public IEnumerable<(int x, int y)> GetAdjacent(int x, int y)
+        {
+            for (var ty = y - 1; ty <= y + 1; ty++)
+            {
+                for (var tx = x - 1; tx <= x + 1; tx++)
+                {
+                    if ((tx != x || ty != y) && IsValid(tx, ty))
+                    {
+                        yield return (tx, ty);
+                    }
+                }
+            }
         }
 
         public void ForEach(Func<(int x, int y), T?, T?> callback)
@@ -73,6 +111,18 @@ namespace AoC.Common
         public static Grid<int> FromRows(IEnumerable<string> rows)
         {
             return new Grid<int>(rows, row => row.Select(c => c - '0'));
+        }
+
+        public void Display()
+        {
+            for (var y = 0; y < Height; y++)
+            {
+                for (var x = 0; x < Width; x++)
+                {
+                    Console.Write(_items[GetIndex(x, y)]);
+                }
+                Console.WriteLine();
+            }
         }
     }
 }
