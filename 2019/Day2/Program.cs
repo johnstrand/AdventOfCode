@@ -1,58 +1,26 @@
-﻿// Even more cleaning
-List<int> prg = null;
+﻿using AoC.Common;
 
-Dictionary<int, Action<int, int, int>> codes = new()
-{
-    {
-        1,
-        new Action<int, int, int>((ptrIn1, ptrIn2, ptrOut) => prg[ptrOut] = prg[ptrIn1] + prg[ptrIn2])
-    },
-    {
-        2,
-        new Action<int, int, int>((ptrIn1, ptrIn2, ptrOut) => prg[ptrOut] = prg[ptrIn1] * prg[ptrIn2])
-    }
-};
+var computer = IntCode.Parse(File.ReadAllText("input.txt"));
 
-var source = File.ReadAllText("input.txt").Split(',').Select(int.Parse).ToList();
-var part2 = true;
-var next = VerbNounFactory();
-do
-{
-    prg = source.ToList();
-    if (part2)
-    {
-        var (verb, noun) = next(true);
-        prg[1] = noun;
-        prg[2] = verb;
-    }
-    var ptr = 0;
-    while (prg[ptr] != 99)
-    {
-        codes[prg[ptr]](prg[ptr + 1], prg[ptr + 2], prg[ptr + 3]);
-        ptr += 4;
-    }
-}
-while (part2 && prg[0] != 19690720);
-Console.WriteLine(prg[0]);
-var (v, n) = next(false);
-Console.WriteLine($"Noun: {n}. Verb: {v}");
+computer.Set(1, 12);
+computer.Set(2, 2);
 
-Func<bool, (int verb, int noun)> VerbNounFactory()
+computer.Run();
+
+Console.WriteLine($"Part 1: {computer.Get(0)}");
+
+for (var noun = 0; noun < 100; noun++)
 {
-    var currentVerb = -1;
-    var currentNoun = 0;
-    return incr =>
+    for (var verb = 0; verb < 100; verb++)
     {
-        if (incr)
+        computer.Reset();
+        computer.Set(1, noun);
+        computer.Set(2, verb);
+        computer.Run();
+        if (computer.Get(0) == 19690720)
         {
-            currentVerb++;
-            if (currentVerb == 100)
-            {
-                currentNoun++;
-                currentVerb = 0;
-            }
+            Console.WriteLine($"Part 2: {100 * noun + verb}");
+            break;
         }
-
-        return (currentVerb, currentNoun);
-    };
+    }
 }
