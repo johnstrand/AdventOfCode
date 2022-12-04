@@ -7,7 +7,7 @@ computer.Set(2, 2);
 
 computer.Run();
 
-Console.WriteLine($"Part 1: {computer.Get(0)}");
+Console.WriteLine($"Part 1: {computer.Get(0, Mode.Position)}");
 
 for (var noun = 0; noun < 100; noun++)
 {
@@ -17,7 +17,7 @@ for (var noun = 0; noun < 100; noun++)
         computer.Set(1, noun);
         computer.Set(2, verb);
         computer.Run();
-        if (computer.Get(0) == 19690720)
+        if (computer.Get(0, Mode.Position) == 19690720)
         {
             Console.WriteLine($"Part 2: {100 * noun + verb}");
             break;
