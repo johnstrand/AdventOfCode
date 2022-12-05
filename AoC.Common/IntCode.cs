@@ -60,6 +60,7 @@ public class IntCode
     private readonly Dictionary<Operation, (int length, Action<Instruction, long[]> action)> _instruction = new();
 
     private Func<long> _valueSource = () => 0;
+    private Action<long>? _outputHandler;
 
     public static IntCode Parse(string program)
     {
@@ -69,6 +70,11 @@ public class IntCode
     public void SetInput(Func<long> valueSource)
     {
         _valueSource = valueSource;
+    }
+
+    public void SetOutput(Action<long> handler)
+    {
+        _outputHandler = handler;
     }
 
     public IntCode(string[] program)
@@ -87,8 +93,20 @@ public class IntCode
         _instruction[Operation.Input] = (2, (instr, args) =>
             Set(args[0], _valueSource(), instr.P0 == Mode.Relative));
 
-        _instruction[Operation.Output] = (2, (instr, args) =>
-            _output.Add(Get(args[0], instr.P0)));
+        _instruction[Operation.Output] = (
+            2,
+            (instr, args) =>
+            {
+                if (_outputHandler != null)
+                {
+                    _outputHandler(Get(args[0], instr.P0));
+                }
+                else
+                {
+                    _output.Add(Get(args[0], instr.P0));
+                }
+            }
+        );
 
         _instruction[Operation.JumpIfTrue] = (
             3,
