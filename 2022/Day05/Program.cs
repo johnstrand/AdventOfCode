@@ -43,7 +43,7 @@ foreach (var isPart1 in new[] { true, false })
     for (var rowNo = numberRow + 2; rowNo < content.Count; rowNo++)
     {
         var instr = content[rowNo];
-        var match = Regex.Match(instr, @"move (\d+) from (\d+) to (\d+)");
+        var match = InstructionMatcher().Match(instr);
         var count = int.Parse(match.Groups[1].Value);
         var from = int.Parse(match.Groups[2].Value) - 1;
         var to = int.Parse(match.Groups[3].Value) - 1;
@@ -68,4 +68,10 @@ foreach (var isPart1 in new[] { true, false })
 foreach (var a in answers)
 {
     Console.WriteLine(a);
+}
+
+internal partial class Program
+{
+    [GeneratedRegex("move (\\d+) from (\\d+) to (\\d+)")]
+    private static partial Regex InstructionMatcher();
 }
