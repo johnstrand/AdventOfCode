@@ -4,8 +4,6 @@
     var p2 = false;
     for (var i = 4; i < seq.Length && !(p1 && p2); i++)
     {
-        // Console.WriteLine($"Testing {seq.Substring(i - 4, 4)}");
-
         if (!p2 && i > 14 && seq.Substring(i - 14, 14).Distinct().Count() == 14)
         {
             Console.WriteLine($"Part 2: {i}");
