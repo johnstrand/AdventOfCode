@@ -39,15 +39,26 @@ for (var round = 0; round < (part1 ? 20 : 1_000); round++)
             }
             //Console.WriteLine(item);
 
+            var nextMonkey = monkeys[item.Level % monkey.Test == 0 ? monkey.IfTrue : monkey.IfFalse];
+
+            if (part1)
+            {
+                nextMonkey.Items.Enqueue(item);
+                continue;
+            }
+
+            var nextValue = nextMonkey.Operation.Apply(item.Level);
+
+            /*
             if ((item.Level % monkey.Test) == 0)
             {
-                item.Level /= monkey.Test;
                 monkeys[monkey.IfTrue].Items.Enqueue(item);
             }
             else
             {
                 monkeys[monkey.IfFalse].Items.Enqueue(item);
             }
+            */
         }
     }
 
