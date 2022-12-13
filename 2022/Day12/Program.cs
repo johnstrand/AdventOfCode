@@ -34,7 +34,7 @@ bool CanMove(int xFrom, int yFrom, int xTo, int yTo)
 
 int Index(int x, int y) => y * w + x;
 
-double Distance(int xFrom, int yFrom, int xTo, int yTo) => Math.Sqrt(Math.Pow(xFrom - xTo, 2) + Math.Pow(yFrom - yTo, 2));
+int Distance(int xFrom, int yFrom, int xTo, int yTo) => Math.Abs(xFrom - xTo) + Math.Abs(yFrom - yTo);
 
 var startIndex = field.IndexOf('S');
 var x = startIndex % w;
@@ -82,6 +82,11 @@ int Traverse(int x, int y, HashSet<(int x, int y)> history)
         return history.Count;
     }
 
+    if (history.Count >= minPath)
+    {
+        return -1;
+    }
+
     history.Add((x, y));
     var steps = deltas.Select(o => (x: x + o.x, y: y + o.y)).OrderBy(s => Distance(x, y, s.x, s.y)).ToList();
 
@@ -126,7 +131,7 @@ var starts = field.Select((c, i) => c == 'a' || c == 'S' ? i : -1).Where(i => i 
     return Distance(sx, sy, ex, ey);
 }).ToList();
 
-minPath = int.MaxValue;
+//minPath = int.MaxValue;
 var i = 0;
 
 // TODO: Shaaaaaaaaaaaaaaaaaaaaaame
