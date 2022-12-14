@@ -120,7 +120,7 @@ internal class Board
         _data = Enumerable.Repeat(' ', w * h).ToList();
     }
 
-    public int Index(int x, int y) => y * _w + x;
+    public int Index(int x, int y) => (y * _w) + x;
 
     public char Get(int x, int y)
     {

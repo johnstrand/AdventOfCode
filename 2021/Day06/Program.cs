@@ -20,7 +20,6 @@ long GetCount(int start, int age, int max)
     });
 }
 
-
 foreach (var limit in new[] { 80, 256 })
 {
     cache.Clear();

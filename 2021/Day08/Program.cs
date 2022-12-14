@@ -32,7 +32,7 @@ foreach (var row in File.ReadAllLines("input.txt"))
             Console.ResetColor();
             var outputNumbers = output.Select(s => GetNumber(iter, s.ToArray())).ToList();
             part1 += outputNumbers.Count(n => n is 1 or 4 or 7 or 8);
-            part2 += outputNumbers[0] * 1000 + outputNumbers[1] * 100 + outputNumbers[2] * 10 + outputNumbers[3];
+            part2 += (outputNumbers[0] * 1000) + (outputNumbers[1] * 100) + (outputNumbers[2] * 10) + outputNumbers[3];
             break;
         }
     }

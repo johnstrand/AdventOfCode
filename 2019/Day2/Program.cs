@@ -19,7 +19,7 @@ for (var noun = 0; noun < 100; noun++)
         computer.Run();
         if (computer.Get(0, Mode.Position) == 19690720)
         {
-            Console.WriteLine($"Part 2: {100 * noun + verb}");
+            Console.WriteLine($"Part 2: {(100 * noun) + verb}");
             break;
         }
     }

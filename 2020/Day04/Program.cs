@@ -68,13 +68,9 @@ bool ValidHeight(string h)
     {
         return int.TryParse(h[0..^2], out var v) && v >= 150 && v <= 193;
     }
-    else if (h.EndsWith("in"))
-    {
-        return int.TryParse(h[0..^2], out var v) && v >= 59 && v <= 76;
-    }
     else
     {
-        return false;
+        return h.EndsWith("in") ? int.TryParse(h[0..^2], out var v) && v >= 59 && v <= 76 : false;
     }
 }
 

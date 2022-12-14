@@ -116,10 +116,5 @@ char GetState(int x, int y, char[][] field)
         return '\0';
     }
 
-    if (x < 0 || x >= field[y].Length)
-    {
-        return '\0';
-    }
-
-    return field[y][x];
+    return x < 0 || x >= field[y].Length ? '\0' : field[y][x];
 }

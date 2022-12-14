@@ -1,6 +1,6 @@
 var values = File.ReadAllText("input.txt").Split(',').Select(int.Parse).OrderBy(x => x).ToList();
 
-var candidates = values.Count % 2 == 0 ? new[] { values[values.Count / 2 - 1], values[values.Count / 2] }.Distinct() : new[] { values[values.Count / 2] };
+var candidates = values.Count % 2 == 0 ? new[] { values[(values.Count / 2) - 1], values[values.Count / 2] }.Distinct() : new[] { values[values.Count / 2] };
 
 foreach (var candidate in candidates)
 {

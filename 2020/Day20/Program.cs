@@ -39,7 +39,6 @@ var gridSize = (int)Math.Sqrt(fields.Count / 8);
 
 void Place(int x, int y, List<string> placed)
 {
-
 }
 
 internal class Field
@@ -52,7 +51,6 @@ internal class Field
     public string Bottom => data[^1];
     public string Left => new(data.Select(r => r[0]).ToArray());
     public string Right => new(data.Select(r => r[width - 1]).ToArray());
-
 
     public Field(string name, List<string> data)
     {

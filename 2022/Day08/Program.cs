@@ -2,7 +2,7 @@
 var size = (int)Math.Sqrt(grid.Count);
 
 var visible = new HashSet<(int x, int y)>();
-int Height(int x, int y) => grid![y * size + x];
+int Height(int x, int y) => grid![(y * size) + x];
 bool IsOob(int x, int y) => x < 0 || y < 0 || x >= size || y >= size;
 int Incr(int v) => v > 0 ? 1 : v < 0 ? -1 : 0;
 

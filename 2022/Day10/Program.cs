@@ -28,7 +28,6 @@ while (code.Count > 0)
         checkpoint += 40;
     }
 
-
     if (pending != 0)
     {
         reg += pending;

@@ -51,10 +51,7 @@ string Render(int ruleId, int depth = 0)
         return "";
     }
     var rule = rules[ruleId];
-    if (char.IsLetter(rule[0]))
-    {
-        return rule[0].ToString();
-    }
-    return "(" + string.Join("|", rule.Split('|').Select(r => r.Trim()).Select(expr => string.Concat(expr.Split(' ').Select(int.Parse).Select(v => Render(v, depth + 1))))) + ")";
+    return char.IsLetter(rule[0])
+        ? rule[0].ToString()
+        : "(" + string.Join("|", rule.Split('|').Select(r => r.Trim()).Select(expr => string.Concat(expr.Split(' ').Select(int.Parse).Select(v => Render(v, depth + 1))))) + ")";
 }
-

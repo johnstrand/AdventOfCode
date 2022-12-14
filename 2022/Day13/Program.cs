@@ -36,7 +36,6 @@ while (source.Count > 0)
     Console.WriteLine();
 }
 
-
 var t = Sorter.Sort(source2).ToList();
 Console.WriteLine($"Part 1: {part1}");
 
@@ -76,7 +75,6 @@ static class Comparer
                     Console.WriteLine($"{Pad(depth + 2)}- {l} is less than {r}: OK");
                     return true;
                 }
-
             }
             else
             {
@@ -86,18 +84,12 @@ static class Comparer
                     return check.Value;
                 }
             }
-
         }
         if (a.Count > 0)
         {
             return false;
         }
-        if (b.Count > 0)
-        {
-            return true;
-        }
-
-        return null;
+        return b.Count > 0 ? true : null;
     }
 
     //CompareLists((List<object>)left, (List<object>)right);

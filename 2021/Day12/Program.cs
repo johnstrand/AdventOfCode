@@ -39,10 +39,5 @@ bool CanVisit(string next, List<string> history, string? extra = null)
         return true;
     }
 
-    if (extra == null || next != extra)
-    {
-        return !history.Contains(next);
-    }
-
-    return history.Count(n => n == next) < 2;
+    return extra == null || next != extra ? !history.Contains(next) : history.Count(n => n == next) < 2;
 }

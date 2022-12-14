@@ -33,7 +33,6 @@ internal class Mover
 
     public void Tick()
     {
-
     }
 }
 
@@ -287,17 +286,16 @@ internal class ImageDraw : IDrawable, IDisposable
     private const int halfCell = cellSize / 2;
 
     private Point TopLeft(int x, int y) => new(x * cellSize, y * cellSize);
-    private Point TopCenter(int x, int y) => new(x * cellSize + halfCell, y * cellSize);
-    private Point TopRight(int x, int y) => new(x * cellSize + cellSize - 1, y * cellSize);
+    private Point TopCenter(int x, int y) => new((x * cellSize) + halfCell, y * cellSize);
+    private Point TopRight(int x, int y) => new((x * cellSize) + cellSize - 1, y * cellSize);
 
-    private Point Left(int x, int y) => new(x * cellSize, y * cellSize + halfCell);
-    private Point Center(int x, int y) => new(x * cellSize + halfCell, y * cellSize + halfCell);
-    private Point Right(int x, int y) => new(x * cellSize + cellSize - 1, y * cellSize + halfCell);
+    private Point Left(int x, int y) => new(x * cellSize, (y * cellSize) + halfCell);
+    private Point Center(int x, int y) => new((x * cellSize) + halfCell, (y * cellSize) + halfCell);
+    private Point Right(int x, int y) => new((x * cellSize) + cellSize - 1, (y * cellSize) + halfCell);
 
-    private Point BottomLeft(int x, int y) => new(x * cellSize, y * cellSize + cellSize - 1);
-    private Point BottomCenter(int x, int y) => new(x * cellSize + halfCell, y * cellSize + cellSize - 1);
-    private Point BottomRight(int x, int y) => new(x * cellSize + cellSize - 1, y * cellSize + cellSize - 1);
-
+    private Point BottomLeft(int x, int y) => new(x * cellSize, (y * cellSize) + cellSize - 1);
+    private Point BottomCenter(int x, int y) => new((x * cellSize) + halfCell, (y * cellSize) + cellSize - 1);
+    private Point BottomRight(int x, int y) => new((x * cellSize) + cellSize - 1, (y * cellSize) + cellSize - 1);
 
     public void Dispose()
     {
@@ -368,12 +366,7 @@ internal class Grid
             }
             Console.WriteLine(Carts.Count(c => !c.Crashed));
         }*/
-        if (Carts.Count(c => !c.Crashed) == 1)
-        {
-            return true;
-        }
-
-        return false;
+        return Carts.Count(c => !c.Crashed) == 1;
     }
     public static Grid Parse(string input)
     {

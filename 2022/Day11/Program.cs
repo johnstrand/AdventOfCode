@@ -58,7 +58,6 @@ for (var round = 0; round < (part1 ? 20 : 1_000); round++)
             }
             else
             {
-
             }
 
             /*

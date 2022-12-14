@@ -13,12 +13,7 @@ foreach (var index in indices)
 {
     var acc = Run(instr.Select((ins, ix) =>
     {
-        if (ix != index)
-        {
-            return ins;
-        }
-
-        return ins.op == "nop" ? ("jmp", ins.offset) : ("nop", ins.offset);
+        return ix != index ? ins : ins.op == "nop" ? ("jmp", ins.offset) : ("nop", ins.offset);
     }).ToList(), out var exited);
 
     if (exited)

@@ -45,11 +45,6 @@ internal class Body
 
     public bool FindChildRef(string name)
     {
-        if (Name == name)
-        {
-            return true;
-        }
-
-        return Children.Any(child => child.FindChildRef(name));
+        return Name == name ? true : Children.Any(child => child.FindChildRef(name));
     }
 }

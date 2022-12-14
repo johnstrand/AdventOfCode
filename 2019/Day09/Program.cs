@@ -11,4 +11,3 @@ computer.Reset();
 computer.SetInput(() => 2);
 computer.Run(false);
 Console.WriteLine();
-
