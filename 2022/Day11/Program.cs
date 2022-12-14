@@ -49,6 +49,18 @@ for (var round = 0; round < (part1 ? 20 : 1_000); round++)
 
             var nextValue = nextMonkey.Operation.Apply(item.Level);
 
+            if (nextValue % nextMonkey.Test == 0)
+            {
+                if (nextMonkey.Operation.Operator == "+")
+                {
+                    nextValue = nextMonkey.Test - nextMonkey.Operation.Operand.Value;
+                }
+            }
+            else
+            {
+
+            }
+
             /*
             if ((item.Level % monkey.Test) == 0)
             {
