@@ -8,16 +8,15 @@ public class Grid<T>
 
     private readonly List<T?> _items = new();
 
-    public int Width { get; }
-    public int Height { get; }
+    public int Width { get; private set; }
+    public int Height { get; private set; }
 
-    public int Count { get; }
+    public int Count => _items.Count;
 
     public Grid(int width, int height)
     {
         Width = width;
         Height = height;
-        Count = width * height;
         _items.AddRange(Enumerable.Repeat<T?>(default, width * height));
     }
 
@@ -25,7 +24,6 @@ public class Grid<T>
     {
         Width = width;
         Height = height;
-        Count = width * height;
         _items.AddRange(items);
     }
 
@@ -38,7 +36,24 @@ public class Grid<T>
             Width = mappedItems.Count;
             _items.AddRange(mappedItems);
         }
-        Count = Width * Height;
+    }
+
+    public void Expand(int w, int h, T? placeholder = default)
+    {
+        if (w > Width)
+        {
+            for (var index = Height - 1; index >= 0; index--)
+            {
+                _items.InsertRange(index * Width + Width, Enumerable.Repeat<T?>(placeholder, w - Width));
+            }
+            Width = w;
+        }
+
+        if (h > Height)
+        {
+            _items.AddRange(Enumerable.Repeat<T?>(placeholder, (h - Height) * Width));
+            Height = h;
+        }
     }
 
     public T? GetValue(int x, int y)
@@ -106,6 +121,11 @@ public class Grid<T>
     private int GetIndex(int x, int y)
     {
         return IndexCache.GetOrAdd((x, y), (pos) => (pos.y * Width) + pos.x);
+    }
+
+    public static Grid<T> FromRows(IEnumerable<string> rows, Func<char, T> mapper)
+    {
+        return new Grid<T>(rows, row => row.Select(mapper));
     }
 
     public static Grid<int> FromRows(IEnumerable<string> rows)
