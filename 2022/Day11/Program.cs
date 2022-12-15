@@ -1,4 +1,8 @@
-﻿var monkeys = new List<Monkey>();
+﻿#define PART2
+
+using System.Numerics;
+
+var monkeys = new List<Monkey>();
 var data = new Queue<string>(File.ReadAllLines("input-test.txt"));
 
 var part1 = false;
@@ -39,6 +43,7 @@ for (var round = 0; round < (part1 ? 20 : 1_000); round++)
             }
             //Console.WriteLine(item);
 
+            /*
             var nextMonkey = monkeys[item.Level % monkey.Test == 0 ? monkey.IfTrue : monkey.IfFalse];
 
             if (part1)
@@ -59,8 +64,8 @@ for (var round = 0; round < (part1 ? 20 : 1_000); round++)
             else
             {
             }
+            */
 
-            /*
             if ((item.Level % monkey.Test) == 0)
             {
                 monkeys[monkey.IfTrue].Items.Enqueue(item);
@@ -69,29 +74,40 @@ for (var round = 0; round < (part1 ? 20 : 1_000); round++)
             {
                 monkeys[monkey.IfFalse].Items.Enqueue(item);
             }
-            */
         }
     }
 
-    Console.Write($"Round {round} ");
+    Console.Write($"Round {round}\r");
+    /*
     foreach (var monkey in monkeys)
     {
         Console.Write($" {monkey.Inspected}");
     }
     Console.WriteLine();
+    */
 }
 
+Console.WriteLine();
+#if PART2
+Console.WriteLine($"Part 1: {monkeys.OrderByDescending(m => m.Inspected).Take(2).Aggregate(new decimal(1), (acc, cur) => acc * cur.Inspected)}");
+#else
 Console.WriteLine($"Part 1: {monkeys.OrderByDescending(m => m.Inspected).Take(2).Aggregate(1L, (acc, cur) => acc * cur.Inspected)}");
+#endif
 
 internal class Monkey
 {
     public int Id { get; set; }
-    public long Inspected { get; set; }
     public Queue<Item> Items { get; set; } = new();
     public Operation Operation { get; set; } = new("", 0);
-    public int Test { get; set; }
     public int IfTrue { get; set; }
     public int IfFalse { get; set; }
+    public int Inspected { get; set; }
+
+#if PART2
+    public decimal Test { get; set; }
+#else
+    public int Test { get; set; }
+#endif
 
     public override string ToString()
     {
@@ -101,7 +117,11 @@ internal class Monkey
 
 internal class Item
 {
+#if PART2
+    public decimal Level { get; set; }
+#else
     public long Level { get; set; }
+#endif
 
     public static IEnumerable<Item> Parse(string content)
     {
@@ -117,7 +137,11 @@ internal class Item
 internal class Operation
 {
     public string Operator { get; }
+#if PART2
+    public decimal? Operand { get; }
+#else
     public long? Operand { get; }
+#endif
 
     public Operation(string @operator, int? operand)
     {
@@ -130,7 +154,11 @@ internal class Operation
         item.Level = Apply(item.Level);
     }
 
+#if PART2
+    public decimal Apply(decimal value)
+#else
     public long Apply(long value)
+#endif
     {
         return Operator switch
         {
