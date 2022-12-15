@@ -1,6 +1,4 @@
-﻿#define PART2
-
-using System.Numerics;
+﻿#define PART1
 
 var monkeys = new List<Monkey>();
 var data = new Queue<string>(File.ReadAllLines("input-test.txt"));
@@ -15,7 +13,7 @@ while (data.Count > 0)
         Id = id,
         Items = new(Item.Parse(data.Dequeue())),
         Operation = Operation.Parse(data.Dequeue()),
-        Test = int.Parse(data.Dequeue().Split(' ')[^1]),
+        Test = uint.Parse(data.Dequeue().Split(' ')[^1]),
         IfTrue = int.Parse(data.Dequeue().Split(' ')[^1]),
         IfFalse = int.Parse(data.Dequeue().Split(' ')[^1]),
     };
@@ -33,6 +31,7 @@ for (var round = 0; round < (part1 ? 20 : 1_000); round++)
         while (monkey.Items.Count > 0)
         {
             var item = monkey.Items.Dequeue();
+            Console.WriteLine(item.Level);
             monkey.Inspected++;
             //Console.Write($"{monkey.Id}: {item} -> ");
             monkey.Operation.Apply(item);
@@ -43,10 +42,9 @@ for (var round = 0; round < (part1 ? 20 : 1_000); round++)
             }
             //Console.WriteLine(item);
 
-            /*
             var nextMonkey = monkeys[item.Level % monkey.Test == 0 ? monkey.IfTrue : monkey.IfFalse];
 
-            if (part1)
+            if (part1 || nextMonkey.Operation.Operator == "+")
             {
                 nextMonkey.Items.Enqueue(item);
                 continue;
@@ -56,16 +54,12 @@ for (var round = 0; round < (part1 ? 20 : 1_000); round++)
 
             if (nextValue % nextMonkey.Test == 0)
             {
-                if (nextMonkey.Operation.Operator == "+")
-                {
-                    nextValue = nextMonkey.Test - nextMonkey.Operation.Operand.Value;
-                }
+                item.Level = nextMonkey.Test;
             }
-            else
-            {
-            }
-            */
 
+            nextMonkey.Items.Enqueue(item);
+
+            /*
             if ((item.Level % monkey.Test) == 0)
             {
                 monkeys[monkey.IfTrue].Items.Enqueue(item);
@@ -74,17 +68,16 @@ for (var round = 0; round < (part1 ? 20 : 1_000); round++)
             {
                 monkeys[monkey.IfFalse].Items.Enqueue(item);
             }
+            */
         }
     }
 
-    Console.Write($"Round {round}\r");
-    /*
+    Console.Write($"Round {round} ");
     foreach (var monkey in monkeys)
     {
         Console.Write($" {monkey.Inspected}");
     }
     Console.WriteLine();
-    */
 }
 
 Console.WriteLine();
@@ -106,7 +99,7 @@ internal class Monkey
 #if PART2
     public decimal Test { get; set; }
 #else
-    public int Test { get; set; }
+    public uint Test { get; set; }
 #endif
 
     public override string ToString()
@@ -120,12 +113,12 @@ internal class Item
 #if PART2
     public decimal Level { get; set; }
 #else
-    public long Level { get; set; }
+    public ulong Level { get; set; }
 #endif
 
     public static IEnumerable<Item> Parse(string content)
     {
-        return content.Split(':')[1].Split(",").Select(v => new Item { Level = int.Parse(v.Trim()) });
+        return content.Split(':')[1].Split(",").Select(v => new Item { Level = uint.Parse(v.Trim()) });
     }
 
     public override string ToString()
@@ -140,10 +133,10 @@ internal class Operation
 #if PART2
     public decimal? Operand { get; }
 #else
-    public long? Operand { get; }
+    public ulong? Operand { get; }
 #endif
 
-    public Operation(string @operator, int? operand)
+    public Operation(string @operator, uint? operand)
     {
         Operator = @operator;
         Operand = operand;
@@ -157,7 +150,7 @@ internal class Operation
 #if PART2
     public decimal Apply(decimal value)
 #else
-    public long Apply(long value)
+    public ulong Apply(ulong value)
 #endif
     {
         return Operator switch
@@ -170,6 +163,6 @@ internal class Operation
     public static Operation Parse(string content)
     {
         var parts = content.Split(' ');
-        return new(parts[^2], int.TryParse(parts[^1], out var v) ? v : null);
+        return new(parts[^2], uint.TryParse(parts[^1], out var v) ? v : null);
     }
 }
