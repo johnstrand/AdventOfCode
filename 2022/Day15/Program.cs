@@ -9,6 +9,7 @@ const long bounds = 4_000_000;
 const int rowIndex = 2_000_000;
 
 var rows = File.ReadAllLines("input.txt").ToList();
+
 var index = 0;
 
 var skipLists = new Dictionary<int, List<(int from, int to)>>();

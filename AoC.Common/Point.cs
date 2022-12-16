@@ -58,3 +58,22 @@ public class Point
         return $"{X}x{Y}";
     }
 }
+
+public class Edge<T>
+{
+    public T From { get; }
+    public T To { get; }
+    public bool Unidirectional { get; }
+
+    public Edge(T from, T to, bool unidirectional = false)
+    {
+        From = from;
+        To = to;
+        Unidirectional = unidirectional;
+    }
+}
+
+public class Edge : Edge<Point>
+{
+    public Edge(Point from, Point to, bool unidirectional = false) : base(from, to, unidirectional) { }
+}
