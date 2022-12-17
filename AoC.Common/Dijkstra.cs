@@ -4,6 +4,8 @@ public class Dijkstra<T> where T : class
     private readonly HashSet<T> _points = new();
     private readonly Dictionary<T, HashSet<T>> _edges = new();
 
+    private readonly Dictionary<(T from, T to), List<T>> _routeCache = new();
+
     public Dijkstra()
     {
     }
@@ -54,6 +56,11 @@ public class Dijkstra<T> where T : class
 
     public List<T> Solve(T start, T end)
     {
+        if (_routeCache.TryGetValue((start, end), out var cachedRoute))
+        {
+            return cachedRoute;
+        }
+
         // Shortest distance between the node and the start, initially set to Infinity (or thereabouts)
         var dist = _edges.Keys.ToDictionary(k => k, _ => int.MaxValue);
 
@@ -129,7 +136,7 @@ public class Dijkstra<T> where T : class
 
         // If we managed to find our way back to the start,
         // return the list of nodes, otherwise return an empty list
-        return path[0] == start ? path : new();
+        return _routeCache[(start, end)] = path[0] == start ? path : new();
     }
 }
 
