@@ -3,8 +3,10 @@
 namespace AoC.Common;
 public class Point
 {
-    public int X { get; private set; }
-    public int Y { get; private set; }
+    public int X { get; set; }
+    public int Y { get; set; }
+
+    public static Point Origin { get; } = new(0, 0);
 
     public Point(int x, int y)
     {
@@ -56,6 +58,79 @@ public class Point
     public override string ToString()
     {
         return $"{X}x{Y}";
+    }
+}
+
+public class BigPoint
+{
+    public long X { get; set; }
+    public long Y { get; set; }
+
+    public static BigPoint Origin { get; } = new(0, 0);
+
+    public BigPoint(long x, long y)
+    {
+        X = x;
+        Y = y;
+    }
+
+    public void Normalize()
+    {
+        X = Normalize(X);
+        Y = Normalize(Y);
+    }
+
+    private static long Normalize(long value)
+    {
+        return value == 0 ? 0 : value / Math.Abs(value);
+    }
+
+    public static bool operator ==(BigPoint? p1, BigPoint? p2)
+    {
+        return p1 is null || p2 is null ? p1 is null && p2 is null : p1.X == p2.X && p1.Y == p2.Y;
+    }
+
+    public static bool operator !=(BigPoint? p1, BigPoint? p2)
+    {
+        return !(p1 == p2);
+    }
+
+    public static BigPoint operator +(BigPoint p1, BigPoint p2)
+    {
+        return new(p1.X + p2.X, p1.Y + p2.Y);
+    }
+
+    public static BigPoint operator -(BigPoint p1, BigPoint p2)
+    {
+        return new(p1.X - p2.X, p1.Y - p2.Y);
+    }
+
+    public override bool Equals([NotNullWhen(true)] object? obj)
+    {
+        return obj is BigPoint p && p == this;
+    }
+
+    public override int GetHashCode()
+    {
+        return (X ^ Y).GetHashCode();
+    }
+
+    public override string ToString()
+    {
+        return $"{X}x{Y}";
+    }
+
+    public BigPoint Offset(long x, long y)
+    {
+        X += x;
+        Y += y;
+
+        return this;
+    }
+
+    public BigPoint OffsetCopy(long x, long y)
+    {
+        return new BigPoint(X + x, Y + y);
     }
 }
 

@@ -1,10 +1,12 @@
-﻿namespace AoC.Common;
+﻿using System.Collections.Concurrent;
+
+namespace AoC.Common;
 public class Dijkstra<T> where T : class
 {
     private readonly HashSet<T> _points = new();
     private readonly Dictionary<T, HashSet<T>> _edges = new();
 
-    private readonly Dictionary<(T from, T to), List<T>> _routeCache = new();
+    private readonly ConcurrentDictionary<(T from, T to), List<T>> _routeCache = new();
 
     public Dijkstra()
     {
