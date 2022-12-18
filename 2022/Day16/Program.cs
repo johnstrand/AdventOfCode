@@ -7,7 +7,7 @@ var valves = new Dictionary<string, Valve>();
 
 var router = new Dijkstra<string>();
 
-foreach (var line in File.ReadAllLines("input.txt"))
+foreach (var line in File.ReadAllLines("input-test.txt"))
 {
     var parsed = Regex.Match(line, @"Valve (.+?) has flow rate=(\d+); tunnels? leads? to valves? (.+)");
     var valve = new Valve(parsed.Groups[1].Value, int.Parse(parsed.Groups[2].Value), parsed.Groups[3].Value.Split(", ").ToList());
@@ -31,7 +31,6 @@ var maxP = 0;
 
 while (paths.Count > 0)
 {
-    Console.Write($"Max: {maxP}. Pending: {paths.Count:N0}     \r");
     var path = paths.Dequeue();
     var currentNode = "AA";
     var totalTime = 0;
@@ -58,7 +57,6 @@ while (paths.Count > 0)
         {
             paths.Enqueue(path.Append(remaining).ToList());
         }
-        continue;
     }
 
     if (totalP > maxP)
@@ -67,7 +65,27 @@ while (paths.Count > 0)
     }
 }
 
-Console.Write($"Max: {maxP}. Pending: {paths.Count:N0}     \r");
+Console.WriteLine($"Part 1: {maxP}");
+
+paths = new(Permutations.Generate(candidateValues, 2));
+
+maxP = 0;
+
+while (paths.Count > 0)
+{
+    var path = paths.Dequeue();
+    var currentNode = "AA";
+    var elephantNode = "AA";
+
+    for (var i = 0; i < path.Count; i += 2)
+    {
+        var nextNode = path[i];
+        var nextElephantNode = path[i + 1];
+        var route = router.Solve(currentNode, nextNode);
+        var elephantRoute = router.Solve(elephantNode, nextElephantNode);
+    }
+}
+
 Console.WriteLine();
 
 internal record Valve(string Id, int Flow, List<string> Connections, bool Open = false);
