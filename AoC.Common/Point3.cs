@@ -49,6 +49,11 @@ public class Point3
         return new(p1.X - p2.X, p1.Y - p2.Y, p1.Z + p2.Z);
     }
 
+    public static Point3 operator *(Point3 p, int n)
+    {
+        return new(p.X * n, p.Y * n, p.Z * n);
+    }
+
     public override bool Equals([NotNullWhen(true)] object? obj)
     {
         return obj is Point3 p && p == this;

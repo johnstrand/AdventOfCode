@@ -1,10 +1,16 @@
 ﻿using AoC.Common;
 
 var nodes = new HashSet<Point3>();
+
+
+
 foreach (var row in File.ReadAllLines("input.txt"))
 {
     var coords = row.Split(",").Select(int.Parse).ToList();
-    nodes.Add(new(coords[0], coords[1], coords[2]));
+    var node = new Point3(coords[0], coords[1], coords[2]);
+
+    nodes.Add(node);
+
 }
 
 var visited = new HashSet<Point3>();
@@ -27,8 +33,6 @@ void Visit(Point3 node, int depth = 0)
     {
         return;
     }
-
-    // Console.WriteLine($"{new string(' ', depth)}Visiting {node}");
 
     foreach (var adjacent in deltas.Select(d => d + node))
     {
