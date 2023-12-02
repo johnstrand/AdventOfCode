@@ -31,7 +31,7 @@ for (var round = 0; round < (part1 ? 20 : 1_000); round++)
         while (monkey.Items.Count > 0)
         {
             var item = monkey.Items.Dequeue();
-            Console.WriteLine(item.Level);
+            // Console.WriteLine(item.Level);
             monkey.Inspected++;
             //Console.Write($"{monkey.Id}: {item} -> ");
             monkey.Operation.Apply(item);
@@ -52,10 +52,24 @@ for (var round = 0; round < (part1 ? 20 : 1_000); round++)
 
             var nextValue = nextMonkey.Operation.Apply(item.Level);
 
+            var tempValue = 1U;
+
+            foreach (var m in monkeys)
+            {
+                if (m.Test % nextValue == 0)
+                {
+                    tempValue *= m.Test;
+                }
+            }
+
+            item.Level = tempValue;
+
+            /*
             if (nextValue % nextMonkey.Test == 0)
             {
                 item.Level = nextMonkey.Test;
             }
+            */
 
             nextMonkey.Items.Enqueue(item);
 
@@ -84,7 +98,7 @@ Console.WriteLine();
 #if PART2
 Console.WriteLine($"Part 1: {monkeys.OrderByDescending(m => m.Inspected).Take(2).Aggregate(new decimal(1), (acc, cur) => acc * cur.Inspected)}");
 #else
-Console.WriteLine($"Part 1: {monkeys.OrderByDescending(m => m.Inspected).Take(2).Aggregate(1L, (acc, cur) => acc * cur.Inspected)}");
+Console.WriteLine($"Part 2: {monkeys.OrderByDescending(m => m.Inspected).Take(2).Aggregate(1L, (acc, cur) => acc * cur.Inspected)}");
 #endif
 
 internal class Monkey
