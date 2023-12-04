@@ -1,34 +1,64 @@
-﻿using System.Text.RegularExpressions;
+﻿using AoC.Common;
 
-var display = Enumerable.Repeat(' ', 7 * 3).ToList();
+var test = false;
+
+var w = test ? 7 : 50;
+var h = test ? 3 : 6;
+var source = test ? "input-test.txt" : "input.txt";
+
+var display = Enumerable.Repeat(' ', w * h).ToList();
 
 void Show()
 {
-    for (var offset = 0; offset < display.Count; offset += 7)
+    Console.Clear();
+    for (var offset = 0; offset < display.Count; offset += w)
     {
-        Console.WriteLine(new string(display.GetRange(offset, 7).ToArray()));
+        Console.WriteLine(new string(display.GetRange(offset, w).ToArray()));
     }
+    Task.Delay(10).Wait();
 }
 
-foreach (var cmd in File.ReadAllLines("input-test.txt"))
+foreach (var cmd in File.ReadAllLines(source))
 {
-    Match m;
-    if ((m = Regex.Match(cmd, @"^rect (\d+)x(\d+)$")).Success)
+    var commands = cmd.SplitRemoveEmpty(' ', '=', 'b', 'x', 'y');
+    if (commands[0] == "rect")
     {
-        for (var y = 0; y < int.Parse(m.Groups[2].Value); y++)
+        for (var y = 0; y < int.Parse(commands[2]); y++)
         {
-            for (var x = 0; x < int.Parse(m.Groups[1].Value); x++)
+            for (var x = 0; x < int.Parse(commands[1]); x++)
             {
-                display[y * 7 + x] = '#';
+                display[(y * w) + x] = '#';
             }
         }
     }
-    else if ((m = Regex.Match(cmd, @"^rotate (.+?)=(\d+) by (\d+)$")).Success)
+    else if (commands[1] == "column")
     {
-        var type = m.Groups[1].Value[^1];
-        var val = int.Parse(m.Groups[2].Value);
-        var dist = int.Parse(m.Groups[3].Value);
-
+        var x = int.Parse(commands[2]);
+        var distance = int.Parse(commands[^1]);
+        var original = display.ToList();
+        for (var y = 0; y < h; y++)
+        {
+            var sourceIndex = (y * w) + x;
+            var targetIndex = ((y + distance) % h * w) + x;
+            display[targetIndex] = original[sourceIndex];
+        }
     }
+    else
+    {
+        var y = int.Parse(commands[2]);
+        var distance = int.Parse(commands[^1]);
+        var original = display.ToList();
+        for (var x = 0; x < w; x++)
+        {
+            var sourceIndex = (y * w) + x;
+            var targetIndex = (y * w) + ((x + distance) % w);
+            display[targetIndex] = original[sourceIndex];
+        }
+    }
+
     Show();
 }
+
+var part1 = display.Count(c => c == '#');
+
+Render.Result("Part 1", part1);
