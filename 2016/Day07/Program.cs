@@ -1,18 +1,49 @@
 ﻿using System.Text;
-using System.Text.RegularExpressions;
 
-var valid = 0;
+using AoC.Common;
+
+var part1 = 0;
+var part2 = 0;
 foreach (var row in File.ReadAllLines("input.txt"))
 {
     GetSegments(row, out var regular, out var hyper);
     var isValid = regular.Any(HasAbba) && !hyper.Any(HasAbba);
     if (isValid)
     {
-        valid++;
+        part1++;
+    }
+
+    if (GetABA(regular, out var aba) && aba.Any(x => hyper.Any(y => HasBAB(y, x))))
+    {
+        part2++;
     }
 }
 
-Console.WriteLine($"Part 1: {valid}");
+Render.Result("Part 1", part1);
+Render.Result("Part 2", part2);
+
+static bool GetABA(List<string> values, out List<string> aba)
+{
+    aba = new List<string>();
+    foreach (var value in values)
+    {
+        for (var i = 0; i < value.Length - 2; i++)
+        {
+            if (value[i] == value[i + 2] && value[i] != value[i + 1])
+            {
+                aba.Add(value.Substring(i, 3));
+            }
+        }
+    }
+
+    return aba.Count > 0;
+}
+
+static bool HasBAB(string s, string aba)
+{
+    var bab = new string(new[] { aba[1], aba[0], aba[1] });
+    return s.Contains(bab);
+}
 
 static void GetSegments(string value, out List<string> regular, out List<string> hyper)
 {

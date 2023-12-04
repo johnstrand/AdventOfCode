@@ -7,7 +7,7 @@ var valves = new Dictionary<string, Valve>();
 
 var router = new Dijkstra<string>();
 
-foreach (var line in File.ReadAllLines("input-test.txt"))
+foreach (var line in File.ReadAllLines("input.txt"))
 {
     var parsed = Regex.Match(line, @"Valve (.+?) has flow rate=(\d+); tunnels? leads? to valves? (.+)");
     var valve = new Valve(parsed.Groups[1].Value, int.Parse(parsed.Groups[2].Value), parsed.Groups[3].Value.Split(", ").ToList());
@@ -67,7 +67,14 @@ while (paths.Count > 0)
 
 Console.WriteLine($"Part 1: {maxP}");
 
-paths = new(Permutations.Generate(candidateValues, 2));
+var routeSource = Permutations.Generate(candidateValues).GetEnumerator();
+
+while (routeSource.MoveNext())
+{
+}
+
+/*
+paths = new(Permutations.Generate(candidateValues));
 
 maxP = 0;
 
@@ -85,7 +92,36 @@ while (paths.Count > 0)
         var elephantRoute = router.Solve(elephantNode, nextElephantNode);
     }
 }
+*/
 
 Console.WriteLine();
+
+internal class Mover
+{
+    private readonly string _startPosition;
+    private readonly Dijkstra<string> _router;
+    private readonly List<string> route = new();
+
+    public string Name { get; }
+    public IEnumerator<List<string>> RouteSource { get; }
+
+    public Mover(string name, IEnumerator<List<string>> routeSource, string startPosition, Dijkstra<string> router)
+    {
+        Name = name;
+        RouteSource = routeSource;
+        _startPosition = startPosition;
+        _router = router;
+    }
+
+    public void Reset()
+    {
+        route.Clear();
+    }
+
+    public void Tick()
+    {
+
+    }
+}
 
 internal record Valve(string Id, int Flow, List<string> Connections, bool Open = false);

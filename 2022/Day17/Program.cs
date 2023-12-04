@@ -41,7 +41,7 @@ for (var i = 0; i < templates.Length; i++)
     {
         for (var x = 0; x < w; x++)
         {
-            var ix = y * w + x;
+            var ix = (y * w) + x;
             if (templates[i][ix] == '#')
             {
                 piece.Segments.Add(new BigPoint(x, h - (y + 1)));
@@ -52,7 +52,7 @@ for (var i = 0; i < templates.Length; i++)
     pieces.Add(piece);
 }
 
-var moveSeq = new LoopList<char>(File.ReadAllText("input.txt"));
+var moveSeq = new LoopList<int>(File.ReadAllText("input.txt").Select(c => c == '<' ? -1 : 1));
 
 var pieceSeq = new LoopList<Piece>(pieces);
 
@@ -79,6 +79,8 @@ var maxHeights = new Dictionary<long, long>
 var start = DateTime.Now;
 var deltaH = 0L;
 
+var steps = 0;
+
 while (fallen < limit)
 {
     if (fallen == next)
@@ -88,8 +90,8 @@ while (fallen < limit)
         var speed = fallen / elapsed;
         var remaining = (limit - fallen) / speed;
 
-        //Console.WriteLine($"Pieces: {fallen} ({speed:N2} per second) ({remaining:N2} seconds remaining). Height: {maxY}. Reclaimed: {reclaimed}");
-        Console.WriteLine($"Delta: {maxY - deltaH}");
+        // Console.Write($"\rPieces: {fallen} ({speed:N2} per second) ({remaining:N2} seconds remaining). Height: {maxY}. Reclaimed: {reclaimed}");
+        //Console.WriteLine($"Delta: {maxY - deltaH}");
         deltaH = maxY;
 
         next += 2022;
@@ -103,6 +105,7 @@ while (fallen < limit)
     {
         active.Offset(0, -1);
         var hit = active.Segments.Any(s => s.Y < 1 || rocks.Contains(s));
+        steps++;
         if (hit)
         {
             active.Offset(0, 1);
@@ -115,16 +118,17 @@ while (fallen < limit)
             }
             active = null;
             fallen++;
+            Console.WriteLine($"Fallen: {fallen} ({steps} steps)");
+            steps = 0;
             continue;
         }
     }
 
-    var push = moveSeq.Next();
-    var deltaX = push == '>' ? 1 : -1;
+    var deltaX = moveSeq.Next();
 
     active.Offset(deltaX, 0);
 
-    if (active.Segments.Any(s => s.X < 1 || s.X > 7))
+    if (active.Segments.Any(s => s.X is < 1 or > 7))
     {
         active.Offset(-deltaX, 0);
     }
