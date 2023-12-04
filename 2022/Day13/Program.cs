@@ -1,10 +1,24 @@
 ﻿using System.Collections;
 using System.Text;
 
-var source = new Queue<string>(File.ReadLines("input-test.txt"));
+using AoC.Common;
+
+var source = new Queue<string>(File.ReadLines("input.txt"));
 var source2 = new List<object>();
 var part1 = 0;
 var index = 0;
+
+var test = source.ToList()
+    .Append("[[2]]")
+    .Append("[[6]]")
+    .Where(s => s != "")
+    .Select(s => Parser.Parse(s).ToList())
+    .Order(new ObjectComparer())
+    .ToList();
+
+var part2x1 = test.FindIndex(item => item is List<object> ls && ls.Count == 1 && ls[0] is List<object> n && n.Count == 1 && n[0].Equals(2)) + 1;
+var part2x2 = test.FindIndex(item => item is List<object> ls && ls.Count == 1 && ls[0] is List<object> n && n.Count == 1 && n[0].Equals(6)) + 1;
+
 while (source.Count > 0)
 {
     index++;
@@ -37,9 +51,11 @@ while (source.Count > 0)
 }
 
 var t = Sorter.Sort(source2).ToList();
-Console.WriteLine($"Part 1: {part1}");
 
-static class Sorter
+Render.Result("Part 1", part1);
+Render.Result("Part 2", part2x1 * part2x2);
+
+internal static class Sorter
 {
     public static IEnumerable<object> Sort(IEnumerable<object> source)
     {
@@ -47,7 +63,15 @@ static class Sorter
     }
 }
 
-static class Comparer
+internal class ObjectComparer : IComparer<object>
+{
+    public int Compare(object? x, object? y)
+    {
+        return (Comparer.Compare(x!, y!) ?? true) ? -1 : 1;
+    }
+}
+
+internal static class Comparer
 {
     public static bool? Compare(object left, object right, int depth = 0)
     {
@@ -85,11 +109,7 @@ static class Comparer
                 }
             }
         }
-        if (a.Count > 0)
-        {
-            return false;
-        }
-        return b.Count > 0 ? true : null;
+        return a.Count > 0 ? false : b.Count > 0 ? true : null;
     }
 
     //CompareLists((List<object>)left, (List<object>)right);
@@ -145,11 +165,11 @@ static class Comparer
 
     private static string Stringify(object value)
     {
-        return value is List<object> ls ? $"[{string.Join(", ", ls.Select(Stringify))}]" : value.ToString()!;
+        return value is IEnumerable<object> ls ? $"[{string.Join(", ", ls.Select(Stringify))}]" : value.ToString()!;
     }
 }
 
-static class Parser
+internal static class Parser
 {
     public static IEnumerable<object> Parse(string source)
     {
