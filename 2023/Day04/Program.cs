@@ -30,9 +30,6 @@ var part2 = 0;
 foreach (var key in copies.Keys)
 {
     part2 += ResolveCount(key);
-    //Console.WriteLine($"{key} -> {part2 += ResolveCount(key)}");
 }
 
 Console.WriteLine(part2);
-
-internal record Card(HashSet<int> Winners, List<int> Numbers);
