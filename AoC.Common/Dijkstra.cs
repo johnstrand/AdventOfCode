@@ -34,24 +34,24 @@ public class Dijkstra<T> where T : class
 
     public Dijkstra<T> AddEdge(T from, T to, bool unidirectional = false)
     {
-        if (!_edges.ContainsKey(from))
+        if (!_edges.TryGetValue(from, out var value))
         {
-            _edges[from] = new();
+            value = _edges[from] = new();
         }
 
-        _edges[from].Add(to);
+        value.Add(to);
 
         if (unidirectional)
         {
             return this;
         }
 
-        if (!_edges.ContainsKey(to))
+        if (!_edges.TryGetValue(to, out value))
         {
-            _edges[to] = new();
+            value = _edges[to] = new();
         }
 
-        _edges[to].Add(from);
+        value.Add(from);
 
         return this;
     }

@@ -14,17 +14,6 @@ public class Point
         Y = y;
     }
 
-    public void Normalize()
-    {
-        X = Normalize(X);
-        Y = Normalize(Y);
-    }
-
-    private static int Normalize(int value)
-    {
-        return value == 0 ? 0 : value / Math.Abs(value);
-    }
-
     public static bool operator ==(Point? p1, Point? p2)
     {
         return p1 is null || p2 is null ? p1 is null && p2 is null : p1.X == p2.X && p1.Y == p2.Y;
@@ -72,17 +61,6 @@ public class BigPoint
     {
         X = x;
         Y = y;
-    }
-
-    public void Normalize()
-    {
-        X = Normalize(X);
-        Y = Normalize(Y);
-    }
-
-    private static long Normalize(long value)
-    {
-        return value == 0 ? 0 : value / Math.Abs(value);
     }
 
     public static bool operator ==(BigPoint? p1, BigPoint? p2)
