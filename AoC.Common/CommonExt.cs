@@ -12,9 +12,9 @@ public static class CommonExt
         return (parts[0], parts[1]);
     }
 
-    public static IEnumerable<int> ToNumbers(this string str, char delimiter = ' ')
+    public static IEnumerable<long> ToNumbers(this string str, char delimiter = ' ')
     {
-        return str.SplitRemoveEmpty(delimiter).Select(s => int.TryParse(s, out var i) ? i : throw new Exception($"Could not parse '{s}' to int"));
+        return str.SplitRemoveEmpty(delimiter).Select(s => long.TryParse(s, out var i) ? i : throw new Exception($"Could not parse '{s}' to int"));
     }
 
     public static IEnumerable<int> ToNumbers(this IEnumerable<string> strings)
