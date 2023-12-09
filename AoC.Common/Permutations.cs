@@ -22,7 +22,7 @@ public static class Permutations
 
             for (var i = 0; i < candidates.Count; i++)
             {
-                foreach (var value in PermuteInner(accumulator.Append(candidates[i]).ToList(), candidates.Omit(i), max))
+                foreach (var value in PermuteInner([.. accumulator, candidates[i]], candidates.Omit(i), max))
                 {
                     yield return value;
                 }

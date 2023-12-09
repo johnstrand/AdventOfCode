@@ -17,7 +17,7 @@ var t = Task.Run(() =>
 {
     foreach (var wire in wires)
     {
-        Eval(wire.Split(',').ToList(), new Point(0, 0), dot);
+        Eval([.. wire.Split(',')], new Point(0, 0), dot);
     }
 
     /*
@@ -78,16 +78,10 @@ void Eval(List<string> instr, Point pos, Sprite dot)
     Eval(instr.Skip(1).ToList(), pos, dot);
 }
 
-internal struct Point
+internal struct Point(int x, int y)
 {
-    public Point(int x, int y)
-    {
-        X = x;
-        Y = y;
-    }
-
-    public int X;
-    public int Y;
+    public int X = x;
+    public int Y = y;
 
     public static bool operator ==(Point p1, Point p2) => p1.X == p2.X && p1.Y == p2.Y;
 
@@ -95,17 +89,17 @@ internal struct Point
 
     public static Point operator +(Point p1, Point p2) => new(p1.X + p2.X, p1.Y + p2.Y);
 
-    public override bool Equals(object obj)
+    public override readonly bool Equals(object obj)
     {
         return obj != null && (obj is Point p) && p == this;
     }
 
-    public override int GetHashCode()
+    public override readonly int GetHashCode()
     {
         return (X * Y).GetHashCode();
     }
 
-    public override string ToString()
+    public override readonly string ToString()
     {
         return $" {X} , {Y} ";
     }

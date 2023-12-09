@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-using AoC.Common;
+﻿using AoC.Common;
 
 var maze = new Maze(File.ReadAllLines("input.txt"));
 
@@ -181,7 +179,7 @@ foreach (var start in starts)
 
 Console.WriteLine($"Part 2: {minPath}");
 
-class Maze
+internal class Maze
 {
     private readonly int _w;
     private readonly int _h;
@@ -296,7 +294,7 @@ class Maze
         // While we have nodes to process
         while (q.Count > 0)
         {
-            var next = q.First(); // Grab the first node on the list
+            var next = q[0]; // Grab the first node on the list
 
             // Already at the end, exit loop
             if (next == end)
@@ -351,5 +349,3 @@ class Maze
         return path[0] == start ? path : [];
     }
 }
-
-

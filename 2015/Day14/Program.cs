@@ -20,26 +20,14 @@ for (var tick = 0; tick < 2504; tick++)
 Console.WriteLine($"Part 1: {raindeer.Max(r => r.Distance)}");
 Console.WriteLine($"Part 2: {raindeer.Max(r => r.Points)}");
 
-internal class Raindeer
+internal class Raindeer(string name, int speed, int duration, int rest)
 {
-    private readonly int speed;
-    private readonly int duration;
-    private readonly int rest;
     private int restRemaining;
-    private int durationRemaining;
+    private int durationRemaining = duration;
 
     public int Distance { get; private set; }
-    public string Name { get; }
+    public string Name { get; } = name;
     public int Points { get; set; }
-
-    public Raindeer(string name, int speed, int duration, int rest)
-    {
-        Name = name;
-        this.speed = speed;
-        this.duration = duration;
-        this.rest = rest;
-        durationRemaining = duration;
-    }
 
     public void Update()
     {

@@ -109,16 +109,10 @@ internal struct Line
     public int Y2;
 }
 
-internal class Board
+internal class Board(int w, int h)
 {
-    private readonly List<char> _data;
-    private readonly int _w;
-
-    public Board(int w, int h)
-    {
-        _w = w;
-        _data = Enumerable.Repeat(' ', w * h).ToList();
-    }
+    private readonly List<char> _data = Enumerable.Repeat(' ', w * h).ToList();
+    private readonly int _w = w;
 
     public int Index(int x, int y) => (y * _w) + x;
 

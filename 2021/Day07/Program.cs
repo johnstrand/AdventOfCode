@@ -13,7 +13,7 @@ foreach (var candidate in candidates)
 }
 
 var part2 = int.MaxValue;
-for (var candidate = values.First(); candidate <= values[^1]; candidate++)
+for (var candidate = values[0]; candidate <= values[^1]; candidate++)
 {
     // Et tu, Bruteforce?
     var sum = 0;

@@ -59,6 +59,6 @@ void CreateGroups(List<long> numbers, long sum, List<long> combo)
 
     foreach (var number in numbers)
     {
-        CreateGroups(numbers.Where(n => n > number).ToList(), sum - number, combo.Append(number).ToList());
+        CreateGroups(numbers.Where(n => n > number).ToList(), sum - number, [.. combo, number]);
     }
 }

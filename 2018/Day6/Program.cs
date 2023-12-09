@@ -114,33 +114,19 @@ IEnumerable<NamedPoint> GetPoints()
             new NamedPoint(parts.First(), parts.Last(), index.ToString("000")));
 }
 
-internal class NamedPoint
+internal class NamedPoint(int x, int y, string name)
 {
-    public NamedPoint(int x, int y, string name)
-    {
-        X = x;
-        Y = y;
-        Name = name;
-    }
-
-    public int X { get; set; }
-    public int Y { get; set; }
-    public string Name { get; set; }
+    public int X { get; set; } = x;
+    public int Y { get; set; } = y;
+    public string Name { get; set; } = name;
 }
 
-internal class Bounds
+internal class Bounds(int x1, int y1, int x2, int y2)
 {
-    public Bounds(int x1, int y1, int x2, int y2)
-    {
-        X1 = x1;
-        Y1 = y1;
-        X2 = x2;
-        Y2 = y2;
-    }
-    public int X1 { get; set; }
-    public int Y1 { get; set; }
-    public int X2 { get; set; }
-    public int Y2 { get; set; }
+    public int X1 { get; set; } = x1;
+    public int Y1 { get; set; } = y1;
+    public int X2 { get; set; } = x2;
+    public int Y2 { get; set; } = y2;
     public Bounds Modify(NamedPoint p)
     {
         X1 = Math.Min(X1, p.X);

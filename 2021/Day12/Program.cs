@@ -28,11 +28,11 @@ void Step(string step, List<string> history, string? twice = null)
             continue;
         }
 
-        Step(n, history.Append(step).ToList(), twice);
+        Step(n, [.. history, step], twice);
     }
 }
 
 bool CanVisit(string next, List<string> history, string? extra = null)
 {
-    return next != next.ToLower() ? true : extra == null || next != extra ? !history.Contains(next) : history.Count(n => n == next) < 2;
+    return next != next.ToLower() || (extra == null || next != extra ? !history.Contains(next) : history.Count(n => n == next) < 2);
 }

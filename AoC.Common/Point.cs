@@ -1,18 +1,12 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
 namespace AoC.Common;
-public class Point
+public class Point(int x, int y)
 {
-    public int X { get; set; }
-    public int Y { get; set; }
+    public int X { get; set; } = x;
+    public int Y { get; set; } = y;
 
     public static Point Origin { get; } = new(0, 0);
-
-    public Point(int x, int y)
-    {
-        X = x;
-        Y = y;
-    }
 
     public static bool operator ==(Point? p1, Point? p2)
     {
@@ -50,18 +44,12 @@ public class Point
     }
 }
 
-public class BigPoint
+public class BigPoint(long x, long y)
 {
-    public long X { get; set; }
-    public long Y { get; set; }
+    public long X { get; set; } = x;
+    public long Y { get; set; } = y;
 
     public static BigPoint Origin { get; } = new(0, 0);
-
-    public BigPoint(long x, long y)
-    {
-        X = x;
-        Y = y;
-    }
 
     public static bool operator ==(BigPoint? p1, BigPoint? p2)
     {
@@ -112,21 +100,13 @@ public class BigPoint
     }
 }
 
-public class Edge<T>
+public class Edge<T>(T from, T to, bool unidirectional = false)
 {
-    public T From { get; }
-    public T To { get; }
-    public bool Unidirectional { get; }
-
-    public Edge(T from, T to, bool unidirectional = false)
-    {
-        From = from;
-        To = to;
-        Unidirectional = unidirectional;
-    }
+    public T From { get; } = from;
+    public T To { get; } = to;
+    public bool Unidirectional { get; } = unidirectional;
 }
 
-public class Edge : Edge<Point>
+public class Edge(Point from, Point to, bool unidirectional = false) : Edge<Point>(from, to, unidirectional)
 {
-    public Edge(Point from, Point to, bool unidirectional = false) : base(from, to, unidirectional) { }
 }

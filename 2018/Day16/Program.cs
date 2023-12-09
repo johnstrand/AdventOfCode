@@ -141,7 +141,7 @@ internal static class Machine
 
         foreach (var oc in opcodes)
         {
-            var computed = oc.Value(op.A, op.B, op.C, initialState.ToArray());
+            var computed = oc.Value(op.A, op.B, op.C, [.. initialState]);
             if (Eq(computed, targetState))
             {
                 yield return oc.Key;

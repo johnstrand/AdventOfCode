@@ -16,20 +16,13 @@ using (var draw = new ImageDraw((grid.Width * 10) + 5, (grid.Height * 10) + 5))
     }
 }
 
-internal class Mover
+internal class Mover(int x, int y, Direction dir)
 {
-    public int X { get; set; }
-    public int Y { get; set; }
-    public Direction Dir { get; set; }
+    public int X { get; set; } = x;
+    public int Y { get; set; } = y;
+    public Direction Dir { get; set; } = dir;
 
     private readonly Turn nextTurn = Turn.Left;
-
-    public Mover(int x, int y, Direction dir)
-    {
-        X = x;
-        Y = y;
-        Dir = dir;
-    }
 
     public void Tick()
     {
@@ -159,19 +152,12 @@ internal class Board
     }
 }
 
-internal class Room
+internal class Room(int x, int y, Connections connections)
 {
-    public int X { get; }
-    public int Y { get; }
+    public int X { get; } = x;
+    public int Y { get; } = y;
 
-    public Connections Connections { get; }
-
-    public Room(int x, int y, Connections connections)
-    {
-        X = x;
-        Y = y;
-        Connections = connections;
-    }
+    public Connections Connections { get; } = connections;
 }
 
 internal enum Turn
@@ -395,7 +381,7 @@ internal class Grid
         }
         return new Grid
         {
-            Carts = carts.ToArray(),
+            Carts = [.. carts],
             Cells = cells.ToDictionary(c => (c.X, c.Y), c => c)
         };
     }

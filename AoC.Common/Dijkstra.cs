@@ -141,4 +141,3 @@ public class Dijkstra<T> where T : class
         return _routeCache[(start, end)] = path[0] == start ? path : [];
     }
 }
-
