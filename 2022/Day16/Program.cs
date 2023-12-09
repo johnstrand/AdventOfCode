@@ -100,7 +100,7 @@ internal class Mover
 {
     private readonly string _startPosition;
     private readonly Dijkstra<string> _router;
-    private readonly List<string> route = new();
+    private readonly List<string> route = [];
 
     public string Name { get; }
     public IEnumerator<List<string>> RouteSource { get; }

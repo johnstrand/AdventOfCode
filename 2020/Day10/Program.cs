@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-Dictionary<long, long> paths = new();
+Dictionary<long, long> paths = [];
 
 var rows = File.ReadAllLines("input.txt").Select(long.Parse).ToList();
 rows.Add(0);

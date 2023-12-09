@@ -16,7 +16,7 @@ Console.WriteLine($"Active: {grid.Active}");
 
 internal class Grid
 {
-    private HashSet<(int x, int y, int z)> points = new();
+    private HashSet<(int x, int y, int z)> points = [];
 
     public int Active => points.Count;
 

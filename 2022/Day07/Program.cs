@@ -67,9 +67,9 @@ internal class Directory
 
     public Directory? Parent { get; }
 
-    public Dictionary<string, Directory> Children { get; } = new();
+    public Dictionary<string, Directory> Children { get; } = [];
 
-    public Dictionary<string, long> Files { get; } = new();
+    public Dictionary<string, long> Files { get; } = [];
 
     public Directory(string path, Directory? parent)
     {

@@ -1,8 +1,8 @@
 ﻿namespace AoC.Common;
 public class ObjWriter
 {
-    private static readonly List<Point3> vertOffsets = new()
-    {
+    private static readonly List<Point3> vertOffsets =
+    [
         new(0, 0,  0),
         new(0, 0,  1),
         new(0, 1,  0),
@@ -11,10 +11,10 @@ public class ObjWriter
         new(1, 0,  1),
         new(1, 1,  0),
         new(1, 1,  1)
-    };
+    ];
 
-    private static readonly List<Point3> triTemplates = new()
-    {
+    private static readonly List<Point3> triTemplates =
+    [
         new(1, 7, 5),
         new(1, 3, 7),
         new(1, 4, 3),
@@ -27,10 +27,10 @@ public class ObjWriter
         new(1, 6, 2),
         new(2, 6, 8),
         new(2, 8, 4)
-    };
+    ];
 
-    private readonly List<List<int>> _tris = new();
-    private readonly List<Point3> _verts = new();
+    private readonly List<List<int>> _tris = [];
+    private readonly List<Point3> _verts = [];
 
     public void AddCube(Point3 pos, int size = 1)
     {
@@ -40,12 +40,12 @@ public class ObjWriter
 
         foreach (var t in triTemplates)
         {
-            _tris.Add(new()
-            {
+            _tris.Add(
+            [
                 faceOffset + t.X,
                 faceOffset + t.Y,
                 faceOffset + t.Z,
-            });
+            ]);
         }
     }
 

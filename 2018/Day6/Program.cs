@@ -3,7 +3,7 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 
-Dictionary<string, Color> colorLookup = new();
+Dictionary<string, Color> colorLookup = [];
 Random r = new();
 var points = GetPoints();
 

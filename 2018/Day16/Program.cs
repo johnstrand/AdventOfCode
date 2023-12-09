@@ -102,7 +102,7 @@ internal class Operation
 
 internal static class Machine
 {
-    private static readonly Dictionary<string, Func<int, int, int, int[], int[]>> opcodes = new();
+    private static readonly Dictionary<string, Func<int, int, int, int[], int[]>> opcodes = [];
 
     public static int[] ParseState(string input)
     {

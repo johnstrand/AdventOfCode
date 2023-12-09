@@ -2,12 +2,12 @@
 var smallRooms = links.SelectMany(ln => new[] { ln.a, ln.b }).Where(n => n != "start" && n != "end" && n.ToLower() == n).ToList();
 
 var paths = new HashSet<string>();
-Step("start", new List<string>());
+Step("start", []);
 Console.WriteLine($"Part 1: {paths.Count}");
 paths.Clear();
 foreach (var link in smallRooms)
 {
-    Step("start", new List<string>(), link);
+    Step("start", [], link);
 }
 Console.WriteLine($"Part 2: {paths.Count}");
 
@@ -34,10 +34,5 @@ void Step(string step, List<string> history, string? twice = null)
 
 bool CanVisit(string next, List<string> history, string? extra = null)
 {
-    if (next != next.ToLower())
-    {
-        return true;
-    }
-
-    return extra == null || next != extra ? !history.Contains(next) : history.Count(n => n == next) < 2;
+    return next != next.ToLower() ? true : extra == null || next != extra ? !history.Contains(next) : history.Count(n => n == next) < 2;
 }

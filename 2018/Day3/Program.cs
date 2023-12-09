@@ -9,7 +9,7 @@ foreach (var row in File.ReadAllLines("Input.txt"))
     var start = Parse(m.Groups["start"].Value);
     var size = Parse(m.Groups["end"].Value);
 
-    idIndex.Add(id, new List<int>());
+    idIndex.Add(id, []);
 
     for (var y = start.Y; y < start.Y + size.Y; y++)
     {

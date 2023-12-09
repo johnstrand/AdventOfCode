@@ -44,7 +44,7 @@ foreach (var row in rows)
 
         if (!skipLists.ContainsKey(y))
         {
-            skipLists[y] = new();
+            skipLists[y] = [];
         }
 
         skipLists[y].Add((x1, x2));

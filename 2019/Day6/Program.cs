@@ -41,7 +41,7 @@ internal class Body
     public string Name { get; set; }
     public int Depth { get; set; }
     public Body Parent { get; set; }
-    public List<Body> Children { get; set; } = new List<Body>();
+    public List<Body> Children { get; set; } = [];
 
     public bool FindChildRef(string name)
     {

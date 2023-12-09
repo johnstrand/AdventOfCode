@@ -171,7 +171,7 @@ Console.WriteLine($"Part 1: {part1}");
 
 internal class Piece
 {
-    public List<BigPoint> Segments = new();
+    public List<BigPoint> Segments = [];
 
     public Piece Spawn(long x, long y)
     {

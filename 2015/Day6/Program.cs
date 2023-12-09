@@ -104,7 +104,7 @@ internal class Grid
     private int[,] grid;
     private readonly int width;
     private readonly int height;
-    private readonly Dictionary<string, Func<int[,], Point, Point, int[,]>> reducers = new();
+    private readonly Dictionary<string, Func<int[,], Point, Point, int[,]>> reducers = [];
     public int Sum()
     {
         var sum = 0;

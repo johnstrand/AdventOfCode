@@ -40,9 +40,9 @@ internal class Board
 {
     private readonly int _w;
     private readonly int _h;
-    private readonly Dictionary<(int x, int y), char> _data = new();
-    private readonly Dictionary<(int x, int y), Room> _rooms = new();
-    private readonly List<Mover> _movers = new();
+    private readonly Dictionary<(int x, int y), char> _data = [];
+    private readonly Dictionary<(int x, int y), Room> _rooms = [];
+    private readonly List<Mover> _movers = [];
 
     public Room GetRoom(int x, int y)
     {
@@ -311,9 +311,9 @@ internal class Grid
     public int Height => Cells.Keys.Max(k => k.y);
     public int Width => Cells.Keys.Max(k => k.x);
     public Cart[] Carts { get; set; }
-    public Dictionary<(int x, int y), Cell> Cells { get; set; } = new Dictionary<(int x, int y), Cell>();
+    public Dictionary<(int x, int y), Cell> Cells { get; set; } = [];
 
-    private readonly HashSet<(int x, int y)> crashMarkers = new();
+    private readonly HashSet<(int x, int y)> crashMarkers = [];
 
     public bool Draw(IDrawable draw)
     {

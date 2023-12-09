@@ -29,7 +29,7 @@ public static class Permutations
             }
         }
 
-        return PermuteInner(new List<T>(), values, max);
+        return PermuteInner([], values, max);
     }
 
     private static List<T> Omit<T>(this List<T> list, int index)

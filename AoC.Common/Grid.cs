@@ -6,7 +6,7 @@ public class Grid<T>
 {
     private static readonly ConcurrentDictionary<(int x, int y), int> IndexCache = new();
 
-    private readonly List<T?> _items = new();
+    private readonly List<T?> _items = [];
 
     public int Width { get; private set; }
     public int Height { get; private set; }

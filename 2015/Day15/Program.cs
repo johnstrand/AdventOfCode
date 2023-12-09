@@ -5,7 +5,7 @@ var buckets = new List<List<int>>();
 foreach (var item in File.ReadAllLines("input.txt"))
 {
     var match = Regex.Match(item, @"(\w+): capacity (-?\d+), durability (-?\d+), flavor (-?\d+), texture (-?\d+), calories (-?\d+)");
-    buckets.Add(new List<int>());
+    buckets.Add([]);
     for (var group = 2; group < match.Groups.Count; group++)
     {
         buckets[^1].Add(int.Parse(match.Groups[group].Value));

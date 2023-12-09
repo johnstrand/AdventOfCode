@@ -46,7 +46,7 @@ namespace Day04
 {
     public class Board
     {
-        private readonly List<int> _state = new();
+        private readonly List<int> _state = [];
         private bool _hasWon;
 
         public void LoadRow(IEnumerable<int> items)

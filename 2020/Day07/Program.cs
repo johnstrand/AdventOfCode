@@ -15,7 +15,7 @@ foreach (var row in File.ReadAllLines("input.txt"))
     var values = match.Groups[2].Value;
     if (values.Contains("no other"))
     {
-        rules[name] = new List<(string name, int count)>();
+        rules[name] = [];
         continue;
     }
 
