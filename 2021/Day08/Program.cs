@@ -44,7 +44,7 @@ Console.WriteLine($"Part 2: {part2}");
 IEnumerable<List<T>> GetPerms<T>(IEnumerable<T> items)
 {
     var _items = items.ToList();
-    if (!_items.Any())
+    if (_items.Count == 0)
     {
         yield return _items;
         yield break;

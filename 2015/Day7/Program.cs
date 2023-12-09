@@ -1,4 +1,6 @@
-﻿Dictionary<string, Func<ushort, ushort, ushort>> funcs = new()
+﻿using AoC.Common;
+
+Dictionary<string, Func<ushort, ushort, ushort>> funcs = new()
 {
     { "AND", (x, y) => (ushort)(x & y) },
     { "OR", (x, y) => (ushort)(x | y) },
@@ -10,11 +12,12 @@ var regs = new Dictionary<string, string>();
 
 foreach (var row in File.ReadAllLines("input.txt"))
 {
-    var instr = row.Split(new[] { "->" }, StringSplitOptions.RemoveEmptyEntries).Select(str => str.Trim()).ToList();
+    var instr = row.SplitRemoveEmpty("->").Select(str => str.Trim()).ToList();
     regs.Add(instr[1], instr[0]);
 }
 
-// Uncomment to enable part 2 regs["b"] = "3176";
+// Uncomment to enable part 2
+// regs["b"] = "3176";
 
 Console.WriteLine(Resolve(regs, "a"));
 

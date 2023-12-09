@@ -88,7 +88,7 @@ foreach (var line in File.ReadAllLines("input.txt"))
 
     if (line.StartsWith("seeds:"))
     {
-        seeds.AddRange(line.Split(':')[1].ToNumbers().ToList());
+        seeds.AddRange(line.Split(':')[1].ToNumbers64().ToList());
         continue;
     }
 
@@ -99,7 +99,7 @@ foreach (var line in File.ReadAllLines("input.txt"))
         continue;
     }
 
-    var numbers = line.ToNumbers().ToList();
+    var numbers = line.ToNumbers64().ToList();
     var destination = numbers[0];
     var source = numbers[1];
     var length = numbers[2];

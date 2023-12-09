@@ -40,11 +40,12 @@ foreach (var bp in pts)
     {
         if (bounded.Contains(n.Name))
         {
-            if (!areas.ContainsKey(n.Name))
+            if (!areas.TryGetValue(n.Name, out var value))
             {
-                areas.Add(n.Name, 0);
+                value = 0;
+                areas.Add(n.Name, value);
             }
-            areas[n.Name]++;
+            areas[n.Name] = ++value;
         }
         color = GetColor(n.Name);
     }

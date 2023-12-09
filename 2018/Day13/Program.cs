@@ -22,7 +22,7 @@ internal class Mover
     public int Y { get; set; }
     public Direction Dir { get; set; }
 
-    private Turn nextTurn = Turn.Left;
+    private readonly Turn nextTurn = Turn.Left;
 
     public Mover(int x, int y, Direction dir)
     {
@@ -406,9 +406,12 @@ internal class Cell
     public int X { get; set; }
     public int Y { get; set; }
     public char CellType { get; set; }
+
+    internal static readonly char[] cellDelimiters = ['/', '\\', '-', '+', '|'];
+
     public static bool IsCell(char c)
     {
-        return new[] { '/', '\\', '-', '+', '|' }.Contains(c);
+        return cellDelimiters.Contains(c);
     }
 
     public static Cell Create(int x, int y, char c)

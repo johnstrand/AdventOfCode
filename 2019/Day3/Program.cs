@@ -1,5 +1,5 @@
 ﻿using SFML.Graphics;
-Dictionary<Point, int> nodeCount = new();
+Dictionary<Point, int> nodeCount = [];
 
 var wires = File.ReadAllLines("input.txt");
 
@@ -13,7 +13,7 @@ view.Zoom(3f);
 window.SetView(view);
 window.Closed += (s, e) => window.Close();
 
-Task.Run(() =>
+var t = Task.Run(() =>
 {
     foreach (var wire in wires)
     {
@@ -38,6 +38,8 @@ while (window.IsOpen)
     window.Display();
 }
 
+await t;
+
 void Eval(List<string> instr, Point pos, Sprite dot)
 {
     if (instr.Count == 0)
@@ -58,9 +60,9 @@ void Eval(List<string> instr, Point pos, Sprite dot)
     {
         dot.Color = nodeCount.ContainsKey(pos) ? Color.Red : Color.White;
         dot.Position = new SFML.System.Vector2f(pos.X, pos.Y);
-        if (nodeCount.ContainsKey(pos))
+        if (nodeCount.TryGetValue(pos, out var value))
         {
-            nodeCount[pos]++;
+            nodeCount[pos] = ++value;
             Console.WriteLine(pos);
             Console.WriteLine(Math.Abs(pos.X) + Math.Abs(pos.Y));
         }

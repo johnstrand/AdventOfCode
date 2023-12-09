@@ -1,4 +1,6 @@
-﻿var limits = new Dictionary<string, int>
+﻿using AoC.Common;
+
+var limits = new Dictionary<string, int>
 {
     ["red"] = 12,
     ["green"] = 13,
@@ -9,7 +11,7 @@ var part1 = 0;
 var part2 = 0;
 foreach (var row in File.ReadAllLines("input.txt"))
 {
-    var parts = row.Split(new[] { ',', ';', ':', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+    var parts = row.SplitRemoveEmpty(',', ';', ':', ' ');
     var id = int.Parse(parts[1]);
     var value1 = id;
 

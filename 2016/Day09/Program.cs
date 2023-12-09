@@ -46,7 +46,7 @@ static long Expand(string input, int depth = 0)
     while ((searchStart = input.IndexOf('(', searchStart + 1)) != -1)
     {
         var end = input.IndexOf(')', searchStart);
-        var marker = input.Substring(searchStart + 1, end - searchStart - 1).ToNumbers('x').ToArray();
+        var marker = input.Substring(searchStart + 1, end - searchStart - 1).ToNumbers64('x').ToArray();
         var markerLength = end - searchStart + 1;
         // Console.WriteLine($"{new string(' ', depth)}{input} -> {length} -= {markerLength} + {marker[0]}");
         length -= markerLength + marker[0];

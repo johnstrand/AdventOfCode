@@ -15,10 +15,9 @@ foreach (var ev in eventstream)
     if (ev.Type == "BEGIN")
     {
         lastSeen = ev.Id;
-        if (!sleepTracker.ContainsKey(lastSeen))
+        if (sleepTracker.TryAdd(lastSeen, 0))
         {
-            sleepTracker.Add(lastSeen, 0);
-            sleepRanges.Add(lastSeen, new List<(DateTime start, DateTime end)>());
+            sleepRanges.Add(lastSeen, []);
         }
     }
     else
@@ -87,7 +86,7 @@ Event ParseEvent(string text)
     var id = "-1";
     if (ev.Contains('#'))
     {
-        id = ev.Split(' ').Where(e => e.StartsWith("#")).Select(e => e[1..]).First();
+        id = ev.Split(' ').Where(e => e.StartsWith('#')).Select(e => e[1..]).First();
     }
     return new Event
     {

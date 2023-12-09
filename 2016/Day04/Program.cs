@@ -42,7 +42,7 @@ static bool VerifyName(string name, Queue<char> checksum)
 
     foreach (var k in groupedCount.Keys.OrderByDescending(x => x))
     {
-        while (checksum.Count > 0 && groupedCount[k].Any())
+        while (checksum.Count > 0 && groupedCount[k].Count != 0)
         {
             var next = checksum.Dequeue();
             if (!groupedCount[k].Remove(next))

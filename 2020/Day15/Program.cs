@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-
-foreach (var limit in new[] { 10, 2020, 30000000 })
+﻿foreach (var limit in new[] { 10, 2020, 30000000 })
 {
     //var init = new Queue<int>(new[] { 0, 3, 6 });
-    var init = new Queue<int>(new[] { 12, 20, 0, 6, 1, 17, 7 });
+    var init = new Queue<int>([12, 20, 0, 6, 1, 17, 7]);
     var seq = new List<int>();
     var seen = seq
         .Take(seq.Count - 1)
@@ -20,7 +15,7 @@ foreach (var limit in new[] { 10, 2020, 30000000 })
         if (init.Count > 0)
         {
             seq.Add(init.Dequeue());
-            seen[seq.Last()] = new List<int> { turn };
+            seen[seq.Last()] = [turn];
             continue;
         }
         var last = seq[^1];
@@ -36,7 +31,7 @@ foreach (var limit in new[] { 10, 2020, 30000000 })
 
             if (!seen.ContainsKey(value))
             {
-                seen[value] = new List<int>();
+                seen[value] = [];
             }
 
             seen[value].Add(turn);
