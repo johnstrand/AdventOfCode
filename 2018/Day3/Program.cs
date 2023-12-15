@@ -9,7 +9,7 @@ foreach (var row in File.ReadAllLines("Input.txt"))
     var start = Parse(m.Groups["start"].Value);
     var size = Parse(m.Groups["end"].Value);
 
-    idIndex.Add(id, new List<int>());
+    idIndex.Add(id, []);
 
     for (var y = start.Y; y < start.Y + size.Y; y++)
     {
@@ -35,14 +35,8 @@ static Point Parse(string text)
     return new Point(parts[0], parts[1]);
 }
 
-internal class Point
+internal class Point(int x, int y)
 {
-    public int X { get; set; }
-    public int Y { get; set; }
-
-    public Point(int x, int y)
-    {
-        X = x;
-        Y = y;
-    }
+    public int X { get; set; } = x;
+    public int Y { get; set; } = y;
 }

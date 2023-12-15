@@ -11,10 +11,10 @@ var min = int.MaxValue;
 
 var player = new Player { Health = 50, Mana = 500 };
 var boss = new Boss { Health = 55, Attack = 8 };
-Round(player, boss, 0, false, new List<string>());
+Round(player, boss, 0, false, []);
 Console.WriteLine($"Part 1: {min}");
 min = int.MaxValue;
-Round(player, boss, 0, true, new List<string>());
+Round(player, boss, 0, true, []);
 Console.WriteLine($"Part 2: {min}");
 
 void Round(Player player, Boss boss, int spent, bool part2, List<string> log)

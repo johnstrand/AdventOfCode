@@ -171,11 +171,11 @@ Console.WriteLine($"Part 1: {part1}");
 
 internal class Piece
 {
-    public List<BigPoint> Segments = new();
+    public List<BigPoint> Segments = [];
 
     public Piece Spawn(long x, long y)
     {
-        return new Piece { Segments = Segments.Select(s => s.OffsetCopy(x, y)).ToList() };
+        return new Piece { Segments = Segments.ConvertAll(s => s.OffsetCopy(x, y)) };
     }
 
     public Piece Offset(long x, long y)

@@ -24,7 +24,7 @@ Render.Result("Part 2", part2);
 
 static bool GetABA(List<string> values, out List<string> aba)
 {
-    aba = new List<string>();
+    aba = [];
     foreach (var value in values)
     {
         for (var i = 0; i < value.Length - 2; i++)
@@ -47,8 +47,8 @@ static bool HasBAB(string s, string aba)
 
 static void GetSegments(string value, out List<string> regular, out List<string> hyper)
 {
-    regular = new List<string>();
-    hyper = new List<string>();
+    regular = [];
+    hyper = [];
     var buffer = new StringBuilder();
     foreach (var c in value)
     {

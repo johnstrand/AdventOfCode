@@ -1,12 +1,10 @@
-﻿using System;
-using System.IO;
-using System.Linq;
+﻿using AoC.Common;
 
 var valid1 = 0;
 var valid2 = 0;
 foreach (var line in File.ReadAllLines("input.txt"))
 {
-    var parts = line.Split(new[] { ' ', '-', ':' }, StringSplitOptions.RemoveEmptyEntries);
+    var parts = line.SplitRemoveEmpty();
     var min = int.Parse(parts[0]);
     var max = int.Parse(parts[1]);
     var rule = parts[2][0];

@@ -20,7 +20,7 @@ foreach (var setup in GetPermutations(participants))
         var rightScore = pairings[$"{participant}_{right}"];
         var leftScore = pairings[$"{participant}_{left}"];
 
-        setupPoints += (rightScore + leftScore);
+        setupPoints += rightScore + leftScore;
     }
     if (setupPoints > part1)
     {
@@ -38,9 +38,7 @@ IEnumerable<List<string>> GetPermutations(List<string> source)
         for (var i = 0; i < source.Count - 1; i++)
         {
             yield return source.ToList();
-            var temp = source[i + 1];
-            source[i + 1] = source[i];
-            source[i] = temp;
+            (source[i], source[i + 1]) = (source[i + 1], source[i]);
         }
     }
 }

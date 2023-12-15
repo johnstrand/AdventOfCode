@@ -43,19 +43,47 @@ public static class Render
         ["brightwhite"] = "\u001b[107m",
     };
 
-    private static readonly string _ansiReset = "\u001b[0m";
+    private const string _ansiReset = "\u001b[0m";
 
-    private static int _indent = 0;
+    private static int _indent;
     private static bool _shouldIndent = true;
 
     public static string Format(string text)
     {
-        return Regex.Replace(text.Replace("[/]", _ansiReset), @"\[(?<color>[a-z]+)\]", m => _ansiForegroundColors[m.Groups["color"].Value] ?? "");
+        return Regex.Replace(text.Replace("[/]", _ansiReset), @"\[(?<color>[a-z]+)\]", m =>
+        {
+            var key = m.Groups["color"].Value;
+            return _ansiForegroundColors.TryGetValue(key, out var color) ? color : $"[{key}]";
+        });
+    }
+
+    public static void Progress(string text, int done, int total)
+    {
+        var pct = done * 100 / total;
+        Write($"\r{text}: {pct} %");
+        if (pct == 100)
+        {
+            WriteLine("");
+        }
+    }
+
+    public static void ProgressBar(string text, int done, int total, int width, string marker = ">")
+    {
+        var pct = done * 100 / total;
+        var filled = width * done / total;
+
+        var fill = string.Concat(Enumerable.Repeat(marker, filled));
+        var empty = new string(' ', width - filled);
+        Write($"\r{text}: [{fill}{empty}] {pct} %");
+        if (pct == 100)
+        {
+            WriteLine("");
+        }
     }
 
     public static void Result(string label, long result)
     {
-        Console.WriteLine(Format($"{label}: [green]{result,20}[/]"));
+        WriteLine($"{label}: [green]{result,20}[/]");
     }
 
     public static void Write(string text)
@@ -65,7 +93,7 @@ public static class Render
             Console.Write(new string(' ', _indent * 2));
         }
 
-        Console.Write(text);
+        Console.Write(Format(text));
         _shouldIndent = text.EndsWith('\r');
     }
 
@@ -76,7 +104,7 @@ public static class Render
             Console.Write(new string(' ', _indent * 2));
         }
 
-        Console.WriteLine(text);
+        Console.WriteLine(Format(text));
         _shouldIndent = true;
     }
 

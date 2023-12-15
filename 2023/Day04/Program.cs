@@ -9,9 +9,9 @@ foreach (var line in File.ReadAllLines("input.txt"))
     var (info, numbers) = line.ToTuple('|');
     var winners = info.SplitRemoveEmpty(' ', ':');
 
-    var winningNumbers = winners[2..].ToNumbers().ToHashSet();
+    var winningNumbers = winners[2..].ToNumbers32().ToHashSet();
 
-    var own = numbers.ToNumbers().ToList();
+    var own = numbers.ToNumbers32().ToList();
     var matching = own.Where(winningNumbers.Contains).ToList();
     copies[index] = matching.Count;
     var value = matching.Aggregate(0, (acc, _) => acc == 0 ? 1 : acc * 2);

@@ -39,19 +39,12 @@ internal static class Extensions
     }
 }
 
-internal class Point
+internal class Point(int x, int y, int dx, int dy)
 {
-    public Point(int x, int y, int dx, int dy)
-    {
-        X = x;
-        Y = y;
-        Dx = dx;
-        Dy = dy;
-    }
-    public int X { get; set; }
-    public int Y { get; set; }
-    public int Dx { get; set; }
-    public int Dy { get; set; }
+    public int X { get; set; } = x;
+    public int Y { get; set; } = y;
+    public int Dx { get; set; } = dx;
+    public int Dy { get; set; } = dy;
     public bool Visible(Image img) => X >= 0 && Y >= 0 && X < img.Width && Y < img.Height;
     public void Update()
     {

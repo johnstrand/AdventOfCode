@@ -141,20 +141,15 @@ internal class Item
     }
 }
 
-internal class Operation
+internal class Operation(string @operator, uint? operand)
 {
-    public string Operator { get; }
+    public string Operator { get; } = @operator;
 #if PART2
     public decimal? Operand { get; }
 #else
-    public ulong? Operand { get; }
-#endif
+    public ulong? Operand { get; } = operand;
 
-    public Operation(string @operator, uint? operand)
-    {
-        Operator = @operator;
-        Operand = operand;
-    }
+#endif
 
     public void Apply(Item item)
     {

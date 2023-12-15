@@ -11,7 +11,7 @@ Console.Read();
 
 internal class StateMachine
 {
-    private readonly Dictionary<string, string> rules = new();
+    private readonly Dictionary<string, string> rules = [];
     private string state;
     private int gen;
     public int Gen() => gen;

@@ -37,6 +37,6 @@ while (steps.Any(s => !s.Resolved))
 internal class Step
 {
     public string Name { get; set; }
-    public HashSet<string> ResolvedBy { get; set; } = new HashSet<string>();
+    public HashSet<string> ResolvedBy { get; set; } = [];
     public bool Resolved { get; set; }
 }

@@ -1,8 +1,8 @@
 ﻿using AoC.Common;
 
 var input = File.ReadAllLines("input.txt");
-var times = input[0].Split(':')[1].ToNumbers().ToList();
-var distances = input[1].Split(':')[1].ToNumbers().ToList();
+var times = input[0].Split(':')[1].ToNumbers64().ToList();
+var distances = input[1].Split(':')[1].ToNumbers64().ToList();
 
 var part1 = 1L;
 foreach (var (time, distance) in times.Zip(distances))

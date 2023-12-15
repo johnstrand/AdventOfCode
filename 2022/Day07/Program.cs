@@ -59,23 +59,17 @@ var part2 = root.Find(d => d.Size >= spaceNeeded).OrderBy(d => d.Size).First().S
 Console.WriteLine($"Part 1: {part1}");
 Console.WriteLine($"Part 2: {part2}");
 
-internal class Directory
+internal class Directory(string path, Directory? parent)
 {
-    public string Path { get; }
+    public string Path { get; } = path;
 
     public long Size => Files.Values.Sum() + Children.Values.Sum(c => c.Size);
 
-    public Directory? Parent { get; }
+    public Directory? Parent { get; } = parent;
 
-    public Dictionary<string, Directory> Children { get; } = new();
+    public Dictionary<string, Directory> Children { get; } = [];
 
-    public Dictionary<string, long> Files { get; } = new();
-
-    public Directory(string path, Directory? parent)
-    {
-        Path = path;
-        Parent = parent;
-    }
+    public Dictionary<string, long> Files { get; } = [];
 
     public void AddChild(string name)
     {

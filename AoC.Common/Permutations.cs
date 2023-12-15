@@ -22,14 +22,14 @@ public static class Permutations
 
             for (var i = 0; i < candidates.Count; i++)
             {
-                foreach (var value in PermuteInner(accumulator.Append(candidates[i]).ToList(), candidates.Omit(i), max))
+                foreach (var value in PermuteInner([.. accumulator, candidates[i]], candidates.Omit(i), max))
                 {
                     yield return value;
                 }
             }
         }
 
-        return PermuteInner(new List<T>(), values, max);
+        return PermuteInner([], values, max);
     }
 
     private static List<T> Omit<T>(this List<T> list, int index)

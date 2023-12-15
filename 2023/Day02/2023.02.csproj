@@ -18,4 +18,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\AoC.Common\AoC.Common.csproj" />
+  </ItemGroup>
 </Project>

@@ -99,12 +99,11 @@ static void For(Point start, Point end, Action<Point> action)
     }
 }
 
-internal class Grid
+internal class Grid(int width, int height)
 {
-    private int[,] grid;
-    private readonly int width;
-    private readonly int height;
-    private readonly Dictionary<string, Func<int[,], Point, Point, int[,]>> reducers = new();
+    private int[,] grid = new int[width, height];
+    private readonly Dictionary<string, Func<int[,], Point, Point, int[,]>> _reducers = [];
+
     public int Sum()
     {
         var sum = 0;
@@ -117,6 +116,7 @@ internal class Grid
         }
         return sum;
     }
+
     public int Count(Func<int, bool> counter)
     {
         var count = 0;
@@ -129,21 +129,15 @@ internal class Grid
         }
         return count;
     }
-    public Grid(int width, int height)
-    {
-        this.width = width;
-        this.height = height;
-        grid = new int[width, height];
-    }
 
     public void Register(string ev, Func<int[,], Point, Point, int[,]> reducer)
     {
-        reducers.Add(ev, reducer);
+        _reducers.Add(ev, reducer);
     }
 
     public void Raise(string ev, Point start, Point end)
     {
-        grid = reducers[ev](grid, start, end);
+        grid = _reducers[ev](grid, start, end);
     }
 
     public Image AsBitmap()

@@ -41,23 +41,14 @@ void Place(int x, int y, List<string> placed)
 {
 }
 
-internal class Field
+internal class Field(string name, List<string> data)
 {
-    private readonly string name;
-    private readonly List<string> data;
-    private readonly int width;
+    private readonly int width = data[0].Length;
 
     public string Top => data[0];
     public string Bottom => data[^1];
     public string Left => new(data.Select(r => r[0]).ToArray());
     public string Right => new(data.Select(r => r[width - 1]).ToArray());
-
-    public Field(string name, List<string> data)
-    {
-        this.name = name;
-        this.data = data;
-        width = data[0].Length;
-    }
 
     public Field Dump()
     {

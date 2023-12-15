@@ -7,13 +7,13 @@ string row;
 while (!string.IsNullOrWhiteSpace(row = reader.ReadLine()))
 {
     var match = Regex.Match(row, pattern);
-    rules[match.Groups[1].Value] = new List<int>
-    {
+    rules[match.Groups[1].Value] =
+    [
         int.Parse(match.Groups[2].Value),
         int.Parse(match.Groups[3].Value),
         int.Parse(match.Groups[4].Value),
         int.Parse(match.Groups[5].Value),
-    };
+    ];
 }
 
 // Skip header

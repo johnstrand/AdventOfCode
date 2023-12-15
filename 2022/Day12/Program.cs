@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-using AoC.Common;
+﻿using AoC.Common;
 
 var maze = new Maze(File.ReadAllLines("input.txt"));
 
@@ -143,7 +141,7 @@ int Traverse(int x, int y, HashSet<(int x, int y)> history)
 Console.WriteLine("Press any key");
 Console.ReadKey(true);
 */
-Traverse(x, y, new());
+Traverse(x, y, []);
 
 Console.WriteLine($"Part 1: {minPath}");
 
@@ -168,7 +166,7 @@ foreach (var start in starts)
     routeCache.Clear();
     var tx = start % w;
     var ty = start / w;
-    var dist = Traverse(tx, ty, new());
+    var dist = Traverse(tx, ty, []);
     Console.Write($"{i * 1000 / starts.Count} %\r");
 
     if (dist == -1)
@@ -181,12 +179,12 @@ foreach (var start in starts)
 
 Console.WriteLine($"Part 2: {minPath}");
 
-class Maze
+internal class Maze
 {
     private readonly int _w;
     private readonly int _h;
-    private readonly List<char> _field = new();
-    private readonly Dictionary<Point, List<Point>> _edges = new();
+    private readonly List<char> _field = [];
+    private readonly Dictionary<Point, List<Point>> _edges = [];
 
     public Point Start { get; } = new(-1, -1);
     public Point End { get; } = new(-1, -1);
@@ -222,7 +220,7 @@ class Maze
         {
             for (var x = 0; x < _w; x++)
             {
-                _edges[new(x, y)] = new();
+                _edges[new(x, y)] = [];
                 for (var ty = Math.Max(y - 1, 0); ty <= Math.Min(y + 1, _h - 1); ty++)
                 {
                     for (var tx = Math.Max(x - 1, 0); tx <= Math.Min(x + 1, _w - 1); tx++)
@@ -296,7 +294,7 @@ class Maze
         // While we have nodes to process
         while (q.Count > 0)
         {
-            var next = q.First(); // Grab the first node on the list
+            var next = q[0]; // Grab the first node on the list
 
             // Already at the end, exit loop
             if (next == end)
@@ -348,8 +346,6 @@ class Maze
 
         // If we managed to find our way back to the start,
         // return the list of nodes, otherwise return an empty list
-        return path[0] == start ? path : new();
+        return path[0] == start ? path : [];
     }
 }
-
-

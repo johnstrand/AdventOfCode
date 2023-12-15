@@ -1,6 +1,6 @@
 ﻿// TODO: This is a mess
 
-Dictionary<int, List<int>> surroundingIndices = new();
+Dictionary<int, List<int>> surroundingIndices = [];
 
 for (var index = 0; index < 50 * 50; index++)
 {

@@ -1,5 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 
 var seed = "abbhdwsy";
@@ -13,7 +12,9 @@ var password2 = Enumerable.Repeat('\0', 8).ToList();
 Console.Clear();
 while (true)
 {
+#pragma warning disable CA1850 // Prefer static 'HashData' method over 'ComputeHash'
     var hash = md5.ComputeHash(Encoding.ASCII.GetBytes($"{seed}{index}"));
+#pragma warning restore CA1850 // Prefer static 'HashData' method over 'ComputeHash'
     if (CheckHash(hash, out var first, out var second))
     {
         var letter = first.ToString("x")[0];

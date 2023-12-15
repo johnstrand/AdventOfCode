@@ -39,23 +39,8 @@ foreach (var step in steps)
 }
 Console.WriteLine();
 
-internal class Pos
+internal class Pos(int x, int y, int w, int h, char[] grid)
 {
-    private int x;
-    private int y;
-    private readonly int w;
-    private readonly int h;
-    private readonly char[] grid;
-
-    public Pos(int x, int y, int w, int h, char[] grid)
-    {
-        this.x = x;
-        this.y = y;
-        this.w = w;
-        this.h = h;
-        this.grid = grid;
-    }
-
     public void Move(char dir)
     {
         var ny = y + (dir == 'U' ? -1 : dir == 'D' ? 1 : 0);

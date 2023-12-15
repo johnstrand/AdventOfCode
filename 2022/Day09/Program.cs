@@ -53,18 +53,12 @@ foreach (var length in new[] { 2, 10 })
     Console.WriteLine($"Length {length}: {tailHistory.Count}");
 }
 
-internal struct Pos
+internal struct Pos(int x, int y)
 {
-    public int X;
-    public int Y;
+    public int X = x;
+    public int Y = y;
 
-    public Pos(int x, int y)
-    {
-        X = x;
-        Y = y;
-    }
-
-    public override string ToString()
+    public override readonly string ToString()
     {
         return $"{X}:{Y}";
     }

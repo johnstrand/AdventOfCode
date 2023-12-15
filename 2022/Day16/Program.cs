@@ -10,7 +10,7 @@ var router = new Dijkstra<string>();
 foreach (var line in File.ReadAllLines("input.txt"))
 {
     var parsed = Regex.Match(line, @"Valve (.+?) has flow rate=(\d+); tunnels? leads? to valves? (.+)");
-    var valve = new Valve(parsed.Groups[1].Value, int.Parse(parsed.Groups[2].Value), parsed.Groups[3].Value.Split(", ").ToList());
+    var valve = new Valve(parsed.Groups[1].Value, int.Parse(parsed.Groups[2].Value), [.. parsed.Groups[3].Value.Split(", ")]);
     // Uh, so, right
     router.AddNode((valves[valve.Id] = valve).Id);
 }
@@ -55,7 +55,7 @@ while (paths.Count > 0)
     {
         foreach (var remaining in candidateValues.Where(c => !path.Contains(c)))
         {
-            paths.Enqueue(path.Append(remaining).ToList());
+            paths.Enqueue([.. path, remaining]);
         }
     }
 
@@ -96,22 +96,12 @@ while (paths.Count > 0)
 
 Console.WriteLine();
 
-internal class Mover
+internal class Mover(string name, IEnumerator<List<string>> routeSource, string startPosition, Dijkstra<string> router)
 {
-    private readonly string _startPosition;
-    private readonly Dijkstra<string> _router;
-    private readonly List<string> route = new();
+    private readonly List<string> route = [];
 
-    public string Name { get; }
-    public IEnumerator<List<string>> RouteSource { get; }
-
-    public Mover(string name, IEnumerator<List<string>> routeSource, string startPosition, Dijkstra<string> router)
-    {
-        Name = name;
-        RouteSource = routeSource;
-        _startPosition = startPosition;
-        _router = router;
-    }
+    public string Name { get; } = name;
+    public IEnumerator<List<string>> RouteSource { get; } = routeSource;
 
     public void Reset()
     {
@@ -120,7 +110,6 @@ internal class Mover
 
     public void Tick()
     {
-
     }
 }
 

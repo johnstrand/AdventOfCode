@@ -16,20 +16,13 @@ using (var draw = new ImageDraw((grid.Width * 10) + 5, (grid.Height * 10) + 5))
     }
 }
 
-internal class Mover
+internal class Mover(int x, int y, Direction dir)
 {
-    public int X { get; set; }
-    public int Y { get; set; }
-    public Direction Dir { get; set; }
+    public int X { get; set; } = x;
+    public int Y { get; set; } = y;
+    public Direction Dir { get; set; } = dir;
 
-    private Turn nextTurn = Turn.Left;
-
-    public Mover(int x, int y, Direction dir)
-    {
-        X = x;
-        Y = y;
-        Dir = dir;
-    }
+    private readonly Turn nextTurn = Turn.Left;
 
     public void Tick()
     {
@@ -40,9 +33,9 @@ internal class Board
 {
     private readonly int _w;
     private readonly int _h;
-    private readonly Dictionary<(int x, int y), char> _data = new();
-    private readonly Dictionary<(int x, int y), Room> _rooms = new();
-    private readonly List<Mover> _movers = new();
+    private readonly Dictionary<(int x, int y), char> _data = [];
+    private readonly Dictionary<(int x, int y), Room> _rooms = [];
+    private readonly List<Mover> _movers = [];
 
     public Room GetRoom(int x, int y)
     {
@@ -159,19 +152,12 @@ internal class Board
     }
 }
 
-internal class Room
+internal class Room(int x, int y, Connections connections)
 {
-    public int X { get; }
-    public int Y { get; }
+    public int X { get; } = x;
+    public int Y { get; } = y;
 
-    public Connections Connections { get; }
-
-    public Room(int x, int y, Connections connections)
-    {
-        X = x;
-        Y = y;
-        Connections = connections;
-    }
+    public Connections Connections { get; } = connections;
 }
 
 internal enum Turn
@@ -311,9 +297,9 @@ internal class Grid
     public int Height => Cells.Keys.Max(k => k.y);
     public int Width => Cells.Keys.Max(k => k.x);
     public Cart[] Carts { get; set; }
-    public Dictionary<(int x, int y), Cell> Cells { get; set; } = new Dictionary<(int x, int y), Cell>();
+    public Dictionary<(int x, int y), Cell> Cells { get; set; } = [];
 
-    private readonly HashSet<(int x, int y)> crashMarkers = new();
+    private readonly HashSet<(int x, int y)> crashMarkers = [];
 
     public bool Draw(IDrawable draw)
     {
@@ -395,7 +381,7 @@ internal class Grid
         }
         return new Grid
         {
-            Carts = carts.ToArray(),
+            Carts = [.. carts],
             Cells = cells.ToDictionary(c => (c.X, c.Y), c => c)
         };
     }
@@ -406,9 +392,12 @@ internal class Cell
     public int X { get; set; }
     public int Y { get; set; }
     public char CellType { get; set; }
+
+    internal static readonly char[] cellDelimiters = ['/', '\\', '-', '+', '|'];
+
     public static bool IsCell(char c)
     {
-        return new[] { '/', '\\', '-', '+', '|' }.Contains(c);
+        return cellDelimiters.Contains(c);
     }
 
     public static Cell Create(int x, int y, char c)

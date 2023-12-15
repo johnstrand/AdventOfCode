@@ -3,8 +3,8 @@
 namespace AoC.Common;
 public class Dijkstra<T> where T : class
 {
-    private readonly HashSet<T> _points = new();
-    private readonly Dictionary<T, HashSet<T>> _edges = new();
+    private readonly HashSet<T> _points = [];
+    private readonly Dictionary<T, HashSet<T>> _edges = [];
 
     private readonly ConcurrentDictionary<(T from, T to), List<T>> _routeCache = new();
 
@@ -36,7 +36,7 @@ public class Dijkstra<T> where T : class
     {
         if (!_edges.TryGetValue(from, out var value))
         {
-            value = _edges[from] = new();
+            value = _edges[from] = [];
         }
 
         value.Add(to);
@@ -48,7 +48,7 @@ public class Dijkstra<T> where T : class
 
         if (!_edges.TryGetValue(to, out value))
         {
-            value = _edges[to] = new();
+            value = _edges[to] = [];
         }
 
         value.Add(from);
@@ -138,7 +138,6 @@ public class Dijkstra<T> where T : class
 
         // If we managed to find our way back to the start,
         // return the list of nodes, otherwise return an empty list
-        return _routeCache[(start, end)] = path[0] == start ? path : new();
+        return _routeCache[(start, end)] = path[0] == start ? path : [];
     }
 }
-

@@ -2,20 +2,13 @@
 
 namespace AoC.Common;
 
-public class Point3
+public class Point3(int x, int y, int z)
 {
-    public int X { get; set; }
-    public int Y { get; set; }
-    public int Z { get; set; }
+    public int X { get; set; } = x;
+    public int Y { get; set; } = y;
+    public int Z { get; set; } = z;
 
     public static Point3 Origin { get; } = new(0, 0, 0);
-
-    public Point3(int x, int y, int z)
-    {
-        X = x;
-        Y = y;
-        Z = z;
-    }
 
     public void Normalize()
     {

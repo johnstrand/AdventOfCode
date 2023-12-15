@@ -52,12 +52,12 @@ public class IntCode
 
     private readonly Dictionary<long, long> _mem;
     private readonly Dictionary<long, long> _original;
-    private readonly List<long> _output = new();
+    private readonly List<long> _output = [];
 
     private bool _halted;
     private bool _debug;
 
-    private readonly Dictionary<Operation, (int length, Action<Instruction, long[]> action)> _instruction = new();
+    private readonly Dictionary<Operation, (int length, Action<Instruction, long[]> action)> _instruction = [];
 
     private Func<long> _valueSource = () => 0;
     private Action<long>? _outputHandler;
