@@ -1,4 +1,6 @@
-﻿namespace AoC.Common;
+﻿using System.Collections;
+
+namespace AoC.Common;
 
 public abstract class Grid
 {
@@ -13,7 +15,7 @@ public abstract class Grid
     }
 }
 
-public class Grid<T> : Grid
+public class Grid<T> : Grid, IEnumerable<T>
 {
     private readonly List<T?> _items = [];
 
@@ -222,15 +224,30 @@ public class Grid<T> : Grid
         return new Grid<T>(rows, row => row.Select(mapper));
     }
 
-    public void Display()
+    public void Display(int maxHeight = -1)
     {
         for (var y = 0; y < Height; y++)
         {
+            if (y == maxHeight)
+            {
+                return;
+            }
+
             for (var x = 0; x < Width; x++)
             {
                 Console.Write(_items[GetIndex(x, y)]);
             }
             Console.WriteLine();
         }
+    }
+
+    public IEnumerator<T> GetEnumerator()
+    {
+        return ((IEnumerable<T>)_items).GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return ((IEnumerable)_items).GetEnumerator();
     }
 }
