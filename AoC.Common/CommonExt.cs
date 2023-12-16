@@ -51,6 +51,14 @@ public static class CommonExt
         }
     }
 
+    public static IEnumerable<TResult> As<TInput, TResult>(this IEnumerable<TInput> input)
+    {
+        foreach (var item in input)
+        {
+            yield return (TResult)Convert.ChangeType(item, typeof(TResult))!;
+        }
+    }
+
     public static IEnumerable<int> IndexesOf(this char[] str, char c)
     {
         var index = -1;
