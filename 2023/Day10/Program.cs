@@ -86,10 +86,70 @@ while (pending.TryDequeue(out var item))
 }
 
 var part1 = distances.Max();
+Render.Result("Part 1", part1);
 
 int ix;
+
+int CountCrossings(int x, int y, int dx, int dy)
+{
+    var count = 0;
+    while (x >= 0 && y >= 0 && x < w && y < h)
+    {
+        var ix = Index(x, y);
+        if (distances![ix] != -1)
+        {
+            count++;
+            if (dx == -1 && grid[ix] is '7' or 'J')
+            {
+                x--;
+                while (grid[Index(x, y)] == '-')
+                {
+                    x--;
+                }
+            }
+            else if (dx == 1 && grid[ix] is 'L' or 'F')
+            {
+                x++;
+                while (grid[Index(x, y)] == '-')
+                {
+                    x++;
+                }
+            }
+            else if (dy == -1 && grid[ix] is 'L' or 'J')
+            {
+                y--;
+                while (grid[Index(x, y)] == '|')
+                {
+                    y--;
+                }
+            }
+            else if (dy == 1 && grid[ix] is 'F' or 'J')
+            {
+                y++;
+                while (grid[Index(x, y)] == '|')
+                {
+                    y++;
+                }
+            }
+        }
+        x += dx;
+        y += dy;
+    }
+
+    return count;
+}
+
+bool IsOdd(int v) => v == 0 || (v & 1) == 1;
+
 while ((ix = distances.IndexOf(-1)) != -1)
 {
+    var (sx, yy) = Pos(ix);
+
+    distances[ix] = IsOdd(CountCrossings(x, y, 1, 0)) || IsOdd(CountCrossings(x, y, -1, 0)) || IsOdd(CountCrossings(x, y, 0, 1)) || IsOdd(CountCrossings(x, y, 0, -1))
+        ? -3
+        : -2;
+
+    /*
     var shouldDelete = false;
     var toDelete = new HashSet<int>();
     var toSearch = new Queue<(int x, int y)>();
@@ -120,6 +180,7 @@ while ((ix = distances.IndexOf(-1)) != -1)
     {
         distances[deleteIndex] = shouldDelete ? -2 : -3;
     }
+    */
 }
 
 for (var i = 0; i < grid.Count; i += w)
@@ -131,6 +192,5 @@ var part2 = distances.Count(d => d == -3);
 
 // Console.SetCursorPosition(0, h + 1);
 
-Render.Result("Part 1", part1);
 Render.Result("Part 2", part2);
 

@@ -40,4 +40,24 @@ public static class CommonExt
     {
         return Enumerable.Range(range.from, range.to - range.from + 1);
     }
+
+    public static IEnumerable<int> IndexesOf(this string str, char c)
+    {
+        var index = -1;
+
+        while ((index = str.IndexOf(c, index + 1)) != -1)
+        {
+            yield return index;
+        }
+    }
+
+    public static IEnumerable<int> IndexesOf(this char[] str, char c)
+    {
+        var index = -1;
+
+        while ((index = Array.IndexOf(str, c, index + 1)) != -1)
+        {
+            yield return index;
+        }
+    }
 }
