@@ -23,9 +23,9 @@ internal class StateMachine
         for (var i = 0; i < state.Length - 4; i++)
         {
             var seg = state.Substring(i, 5);
-            if (rules.ContainsKey(seg))
+            if (rules.TryGetValue(seg, out var value))
             {
-                newState.Append(rules[seg]);
+                newState.Append(value);
             }
             else
             {

@@ -29,12 +29,13 @@
             var rounds = seen[last];
             var value = rounds[^1] - rounds[^2];
 
-            if (!seen.ContainsKey(value))
+            if (!seen.TryGetValue(value, out var values))
             {
-                seen[value] = [];
+                values = ([]);
+                seen[value] = values;
             }
 
-            seen[value].Add(turn);
+            values.Add(turn);
             seq.Add(value);
         }
     }

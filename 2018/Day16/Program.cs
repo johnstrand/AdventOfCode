@@ -18,13 +18,13 @@ using (var reader = new StreamReader("Input.txt"))
         var op = Operation.Parse(reader.ReadLine());
         var targetState = Machine.ParseState(reader.ReadLine());
         var candidates = Machine.Discover(initialState, targetState, op).ToList();
-        if (!opcodeCandidates.ContainsKey(op.Code))
+        if (!opcodeCandidates.TryGetValue(op.Code, out var value))
         {
             opcodeCandidates.Add(op.Code, new HashSet<string>(candidates));
         }
         else
         {
-            opcodeCandidates[op.Code] = new HashSet<string>(candidates.Where(opcodeCandidates[op.Code].Contains));
+            opcodeCandidates[op.Code] = new HashSet<string>(candidates.Where(value.Contains));
         }
         reader.ReadLine(); // Skip blank
         if (candidates.Count > 2)

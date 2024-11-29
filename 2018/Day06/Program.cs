@@ -67,11 +67,12 @@ Console.Read();
 
 Color GetColor(string name)
 {
-    if (!colorLookup.ContainsKey(name))
+    if (!colorLookup.TryGetValue(name, out var value))
     {
-        colorLookup.Add(name, Color.FromArgb(r.Next(120, 256), r.Next(120, 256), r.Next(120, 256)));
+        value = Color.FromArgb(r.Next(120, 256), r.Next(120, 256), r.Next(120, 256));
+        colorLookup.Add(name, value);
     }
-    return colorLookup[name];
+    return value;
 }
 
 NamedPoint Nearest(Point p, IEnumerable<NamedPoint> points)

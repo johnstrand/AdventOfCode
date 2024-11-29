@@ -47,13 +47,13 @@ while (running >= 0)
     }
 
     var state = string.Concat(grid);
-    if (!states.ContainsKey(state))
+    if (!states.TryGetValue(state, out var value))
     {
         states[state] = i;
     }
     else if (cycle == 0)
     {
-        cycle = i - states[state];
+        cycle = i - value;
         running = cycle;
         repeats.Add(state);
     }

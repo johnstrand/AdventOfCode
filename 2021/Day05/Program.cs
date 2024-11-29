@@ -31,12 +31,13 @@ foreach (var part in new[] { 1, 2 })
 
 void Count((int x, int y) pos)
 {
-    if (!grid.ContainsKey(pos))
+    if (!grid.TryGetValue(pos, out var value))
     {
-        grid[pos] = 0;
+        value = 0;
+        grid[pos] = value;
     }
 
-    grid[pos]++;
+    grid[pos] = ++value;
 }
 
 (int x, int y) Add((int x, int y) a, (int x, int y) b)

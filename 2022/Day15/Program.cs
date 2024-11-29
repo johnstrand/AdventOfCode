@@ -42,12 +42,13 @@ foreach (var row in rows)
             continue;
         }
 
-        if (!skipLists.ContainsKey(y))
+        if (!skipLists.TryGetValue(y, out var value))
         {
-            skipLists[y] = [];
+            value = ([]);
+            skipLists[y] = value;
         }
 
-        skipLists[y].Add((x1, x2));
+        value.Add((x1, x2));
     }
 }
 

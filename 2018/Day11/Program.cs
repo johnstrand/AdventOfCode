@@ -52,7 +52,7 @@ int Sum(Dictionary<string, Cell> grid, int x, int y, int size)
     return (from tx in Enumerable.Range(x, size)
             from ty in Enumerable.Range(y, size)
             let key = $"{tx}x{ty}"
-            select grid.ContainsKey(key) ? grid[key].Power : 0).Sum();
+            select grid.TryGetValue(key, out var value) ? value.Power : 0).Sum();
 }
 
 internal class Cell

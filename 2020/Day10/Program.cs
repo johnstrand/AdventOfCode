@@ -14,7 +14,7 @@ var diffs = new Dictionary<long, long>();
 for (var i = 0; i < rows.Count - 1; i++)
 {
     var diff = rows[i + 1] - rows[i];
-    diffs[diff] = (diffs.ContainsKey(diff) ? diffs[diff] : 0) + 1;
+    diffs[diff] = (diffs.TryGetValue(diff, out var value) ? value : 0) + 1;
 }
 
 Console.WriteLine($"Part 1: {diffs[1] * diffs[3]}");
@@ -34,11 +34,12 @@ long Search(long current, long target, List<long> options)
     var sum = 0L;
     foreach (var opt in opts)
     {
-        if (!paths.ContainsKey(opt))
+        if (!paths.TryGetValue(opt, out var value))
         {
-            paths[opt] = Search(opt, target, options.Where(o => o > opt).ToList());
+            value = Search(opt, target, options.Where(o => o > opt).ToList());
+            paths[opt] = value;
         }
-        sum += paths[opt];
+        sum += value;
     }
     return sum;
 }

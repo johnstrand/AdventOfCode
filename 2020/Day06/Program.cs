@@ -21,9 +21,9 @@ foreach (var row in File.ReadAllLines("input.txt"))
         groupCount++;
         foreach (var c in row)
         {
-            if (currentGroup.ContainsKey(c))
+            if (currentGroup.TryGetValue(c, out var value))
             {
-                currentGroup[c]++;
+                currentGroup[c] = ++value;
             }
             else
             {
