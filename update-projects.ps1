@@ -1,4 +1,12 @@
-$targetFramework = "net8.0"
+$null = (dotnet --list-sdks | Select-Object -Last 1) -match "^(\d+\.\d+)"
+$targetFramework = "net$($matches[1])"
+
+if ($targetFramework -notmatch "^net\d+\.\d+$") {
+    Write-Host "Could not determine target framework"
+    return
+}
+
+Write-Host "Setting target framework to $targetFramework"
 
 Push-Location $PSScriptRoot
 Get-ChildItem -Filter "*.csproj" -Recurse | ForEach-Object {
