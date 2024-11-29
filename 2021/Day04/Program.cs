@@ -39,7 +39,7 @@ foreach (var number in numbers)
 
 List<int> ReadNumbers(char delim)
 {
-    return reader.ReadLine()!.Split(new[] { delim }, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList();
+    return reader.ReadLine()!.Split([delim], StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList();
 }
 
 namespace Day04

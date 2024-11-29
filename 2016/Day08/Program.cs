@@ -13,7 +13,7 @@ void Show()
     Console.Clear();
     for (var offset = 0; offset < display.Count; offset += w)
     {
-        Console.WriteLine(new string(display.GetRange(offset, w).ToArray()));
+        Console.WriteLine(new string([.. display.GetRange(offset, w)]));
     }
     Task.Delay(10).Wait();
 }

@@ -41,7 +41,7 @@ static bool GetABA(List<string> values, out List<string> aba)
 
 static bool HasBAB(string s, string aba)
 {
-    var bab = new string(new[] { aba[1], aba[0], aba[1] });
+    var bab = new string([aba[1], aba[0], aba[1]]);
     return s.Contains(bab);
 }
 
