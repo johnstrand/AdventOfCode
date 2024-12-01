@@ -1,10 +1,16 @@
 ﻿namespace AoC.Common;
 public static class CommonExt
 {
+    public static TResult SelectOne<TItem, TResult>(this TItem item, Func<TItem, TResult> map)
+    {
+        return map(item);
+    }
+
     public static string[] SplitRemoveEmpty(this string str)
     {
         return str.SplitRemoveEmpty(' ');
     }
+
     public static string[] SplitRemoveEmpty(this string str, params string[] delimiters)
     {
         return str.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
