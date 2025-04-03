@@ -3,7 +3,7 @@
 var rules = new List<(int first, int follows)>();
 var rulePart = true;
 
-var input = Input.ReadActual();
+var input = Input.ReadTest();
 int i;
 
 for (i = 0; i < input.Count; i++)
@@ -34,6 +34,8 @@ for (; i < input.Count; i++)
         .ToDictionary(v => v.value, v => v.index);
 
     var valid = true;
+    var swap0 = 0;
+    var swap1 = 0;
 
     for (var j = 0; j < row.Count; j++)
     {
@@ -46,6 +48,8 @@ for (; i < input.Count; i++)
 
         if (matchingRules.Any(r => lookup[r] < j))
         {
+            swap0 = j;
+            swap1 = lookup[matchingRules.First(t => lookup[t] < j)];
             valid = false;
             break;
         }
