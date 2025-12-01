@@ -8,14 +8,6 @@ foreach ($project in (Get-ChildItem -Recurse -Filter *.csproj)) {
 
     foreach ($node in $includeNodes) {
         if ($node.Attributes["Update"].Value -like "*.txt") {
-            Write-Host "Found explicit include for *.txt: $($node.OuterXml)"
-            # $node.ParentNode.RemoveChild($node) | Out-Null
-            # $changed = $true
-        }
-    }
-    <#
-    foreach ($node in $includeNodes) {
-        if ($node.Attributes["Include"].Value -eq "*.cs") {
             $node.ParentNode.RemoveChild($node) | Out-Null
             $changed = $true
         }
@@ -25,5 +17,4 @@ foreach ($project in (Get-ChildItem -Recurse -Filter *.csproj)) {
         $xml.Save($project.FullName)
         Write-Host "Updated project file: $($project.FullName)"
     }
-    #>
 }
