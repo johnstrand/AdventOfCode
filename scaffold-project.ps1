@@ -50,4 +50,3 @@ Pop-Location
 Write-Host "Adding created project to solution"
 dotnet sln .\AdventOfCode.sln add --solution-folder $year "$year/Day$_day/$year.$_day.csproj"
 
-.\include-input.ps1
