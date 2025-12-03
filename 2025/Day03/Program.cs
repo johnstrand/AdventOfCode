@@ -1,24 +1,31 @@
 ﻿using AoC.Common;
 
-var part1 = 0;
-foreach (var bank in Input.ReadTest())
+static string Capture(string value, int targetLen)
 {
-    var max = 0;
-    for (var i = 0; i < bank.Length; i++)
+    if (value.Length == targetLen)
     {
-        for (var j = i + 1; j < bank.Length; j++)
-        {
-            var value = (bank[i] - '0') * 10 + (bank[j] - '0');
+        return value;
+    }
 
-            if (value > max)
-            {
-                max = value;
-            }
+    for (var i = 0; i < value.Length - 1; i++)
+    {
+        if (value[i] < value[i + 1])
+        {
+            var valueSpan = value.AsSpan();
+            return Capture(string.Concat(valueSpan[0..i], valueSpan[(i + 1)..]), targetLen);
         }
     }
-    Console.WriteLine($"Bank: {bank[0..10]} => Max pair value: {max}");
 
-    part1 += max;
+    return Capture(value[0..^1], targetLen);
+}
+
+var part1 = 0;
+var part2 = 0L;
+foreach (var bank in Input.ReadActual())
+{
+    part1 += int.Parse(Capture(bank, 2));
+    part2 += long.Parse(Capture(bank, 12));
 }
 
 Console.WriteLine($"Part 1: {part1}");
+Console.WriteLine($"Part 2: {part2}");
