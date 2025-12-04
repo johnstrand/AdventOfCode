@@ -27,6 +27,8 @@ public class Grid<T> : Grid, IEnumerable<T>
 
     public string Stringified => string.Join(Environment.NewLine, Enumerable.Range(0, Height).Select(offset => string.Join(" ", _items.GetRange(offset * Width, Width))));
 
+    public IEnumerable<(int x, int y)> Coordinates => Enumerable.Range(0, Height).SelectMany(y => Enumerable.Range(0, Width).Select(x => (x, y)));
+
     public Grid(int width, int height)
     {
         Width = width;
@@ -73,6 +75,11 @@ public class Grid<T> : Grid, IEnumerable<T>
     public T? GetValue(int x, int y)
     {
         return _items[GetIndex(x, y)];
+    }
+
+    public T GetValue((int x, int y) coord)
+    {
+        return _items[GetIndex(coord.x, coord.y)]!;
     }
 
     public T? SetValue(int x, int y, Func<T?, T?> modifier)
