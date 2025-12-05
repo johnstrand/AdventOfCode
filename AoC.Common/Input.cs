@@ -1,4 +1,5 @@
 ﻿namespace AoC.Common;
+
 public static class Input
 {
     public static List<string> ReadActual()

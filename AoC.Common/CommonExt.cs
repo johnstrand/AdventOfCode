@@ -1,9 +1,15 @@
 ﻿namespace AoC.Common;
+
 public static class CommonExt
 {
     public static TResult SelectOne<TItem, TResult>(this TItem item, Func<TItem, TResult> map)
     {
         return map(item);
+    }
+
+    public static bool InRange(this long value, long min, long max)
+    {
+        return value >= min && value <= max;
     }
 
     public static string[] SplitRemoveEmpty(this string str)
@@ -27,19 +33,32 @@ public static class CommonExt
         return (parts[0], parts[1]);
     }
 
+    public static (int, int) ToTupleInt32(this string str, char delimiter)
+    {
+        var parts = str.Split(delimiter);
+        return (int.Parse(parts[0]), int.Parse(parts[1]));
+    }
+
+    public static (long, long) ToTupleInt64(this string str, char delimiter)
+    {
+        var parts = str.Split(delimiter);
+        return (long.Parse(parts[0]), long.Parse(parts[1]));
+    }
+
+
     public static IEnumerable<int> ToNumbers32(this string str, char delimiter = ' ')
     {
         return str.SplitRemoveEmpty(delimiter).Select(s => int.TryParse(s, out var i) ? i : throw new Exception($"Could not parse '{s}' to int"));
     }
 
-    public static IEnumerable<long> ToNumbers64(this string str, char delimiter = ' ')
-    {
-        return str.SplitRemoveEmpty(delimiter).Select(s => long.TryParse(s, out var i) ? i : throw new Exception($"Could not parse '{s}' to int"));
-    }
-
     public static IEnumerable<int> ToNumbers32(this IEnumerable<string> strings)
     {
         return strings.Select(s => int.TryParse(s, out var i) ? i : throw new Exception($"Could not parse '{s}' to int"));
+    }
+
+    public static IEnumerable<long> ToNumbers64(this string str, char delimiter = ' ')
+    {
+        return str.SplitRemoveEmpty(delimiter).Select(s => long.TryParse(s, out var i) ? i : throw new Exception($"Could not parse '{s}' to int"));
     }
 
     public static IEnumerable<int> ToRange(this (int from, int to) range)
