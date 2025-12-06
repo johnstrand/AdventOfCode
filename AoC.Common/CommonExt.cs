@@ -1,4 +1,6 @@
-﻿namespace AoC.Common;
+﻿using System.Numerics;
+
+namespace AoC.Common;
 
 public static class CommonExt
 {
@@ -19,12 +21,12 @@ public static class CommonExt
 
     public static string[] SplitRemoveEmpty(this string str, params string[] delimiters)
     {
-        return str.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
+        return str.Split(delimiters, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
     }
 
     public static string[] SplitRemoveEmpty(this string str, params char[] delimiters)
     {
-        return str.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
+        return str.Split(delimiters, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
     }
 
     public static (string, string) ToTuple(this string str, char delimiter)
@@ -45,20 +47,24 @@ public static class CommonExt
         return (long.Parse(parts[0]), long.Parse(parts[1]));
     }
 
+    public static T Multiply<T>(this IEnumerable<T> list) where T : struct, INumber<T>
+    {
+        return list.Aggregate((acc, cur) => acc * cur);
+    }
 
     public static IEnumerable<int> ToNumbers32(this string str, char delimiter = ' ')
     {
-        return str.SplitRemoveEmpty(delimiter).Select(s => int.TryParse(s, out var i) ? i : throw new Exception($"Could not parse '{s}' to int"));
+        return str.SplitRemoveEmpty(delimiter).Select(s => int.TryParse(s, out var i) ? i : throw new FormatException($"Could not parse '{s}' to int"));
     }
 
     public static IEnumerable<int> ToNumbers32(this IEnumerable<string> strings)
     {
-        return strings.Select(s => int.TryParse(s, out var i) ? i : throw new Exception($"Could not parse '{s}' to int"));
+        return strings.Select(s => int.TryParse(s, out var i) ? i : throw new FormatException($"Could not parse '{s}' to int"));
     }
 
     public static IEnumerable<long> ToNumbers64(this string str, char delimiter = ' ')
     {
-        return str.SplitRemoveEmpty(delimiter).Select(s => long.TryParse(s, out var i) ? i : throw new Exception($"Could not parse '{s}' to int"));
+        return str.SplitRemoveEmpty(delimiter).Select(s => long.TryParse(s, out var i) ? i : throw new FormatException($"Could not parse '{s}' to int"));
     }
 
     public static IEnumerable<int> ToRange(this (int from, int to) range)
@@ -76,14 +82,6 @@ public static class CommonExt
         }
     }
 
-    public static IEnumerable<TResult> As<TInput, TResult>(this IEnumerable<TInput> input)
-    {
-        foreach (var item in input)
-        {
-            yield return (TResult)Convert.ChangeType(item, typeof(TResult))!;
-        }
-    }
-
     public static IEnumerable<int> IndexesOf(this char[] str, char c)
     {
         var index = -1;
@@ -91,6 +89,14 @@ public static class CommonExt
         while ((index = Array.IndexOf(str, c, index + 1)) != -1)
         {
             yield return index;
+        }
+    }
+
+    public static IEnumerable<TResult> As<TInput, TResult>(this IEnumerable<TInput> input)
+    {
+        foreach (var item in input)
+        {
+            yield return (TResult)Convert.ChangeType(item, typeof(TResult))!;
         }
     }
 }
