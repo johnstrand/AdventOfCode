@@ -9,6 +9,12 @@ public static class CommonExt
         return map(item);
     }
 
+    public static List<T> With<T>(this List<T> list, T item)
+    {
+        list.Add(item);
+        return list;
+    }
+
     public static bool InRange(this long value, long min, long max)
     {
         return value >= min && value <= max;
@@ -70,6 +76,11 @@ public static class CommonExt
     public static IEnumerable<int> ToRange(this (int from, int to) range)
     {
         return Enumerable.Range(range.from, range.to - range.from + 1);
+    }
+
+    public static Point ToPoint(this (int x, int y) p)
+    {
+        return new Point(p.x, p.y);
     }
 
     public static IEnumerable<int> IndexesOf(this string str, char c)

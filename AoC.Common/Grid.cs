@@ -17,7 +17,19 @@ public abstract class Grid
 
 public class Grid<T> : Grid, IEnumerable<T>
 {
-    private readonly List<T?> _items = [];
+    private readonly List<T> _items = [];
+
+    public T this[int x, int y]
+    {
+        get => GetValue(x, y);
+        set => SetValue(x, y, value);
+    }
+
+    public T this[Point p]
+    {
+        get => GetValue(p.X, p.Y);
+        set => SetValue(p.X, p.Y, value);
+    }
 
     public int Width { get; private set; }
 
@@ -33,7 +45,7 @@ public class Grid<T> : Grid, IEnumerable<T>
     {
         Width = width;
         Height = height;
-        _items.AddRange(Enumerable.Repeat<T?>(default, width * height));
+        _items.AddRange(Enumerable.Repeat<T>(default!, width * height));
     }
 
     public Grid(int width, int height, IEnumerable<T> items)
@@ -60,34 +72,39 @@ public class Grid<T> : Grid, IEnumerable<T>
         {
             for (var index = Height - 1; index >= 0; index--)
             {
-                _items.InsertRange((index * Width) + Width, Enumerable.Repeat<T?>(placeholder, w - Width));
+                _items.InsertRange((index * Width) + Width, Enumerable.Repeat(placeholder!, w - Width));
             }
             Width = w;
         }
 
         if (h > Height)
         {
-            _items.AddRange(Enumerable.Repeat<T?>(placeholder, (h - Height) * Width));
+            _items.AddRange(Enumerable.Repeat(placeholder!, (h - Height) * Width));
             Height = h;
         }
     }
 
-    public T? GetValue(int x, int y)
+    public Grid<T> Clone()
+    {
+        return new Grid<T>(Width, Height, _items.ToList());
+    }
+
+    public T GetValue(int x, int y)
     {
         return _items[GetIndex(x, y)];
     }
 
     public T GetValue((int x, int y) coord)
     {
-        return _items[GetIndex(coord.x, coord.y)]!;
+        return _items[GetIndex(coord.x, coord.y)];
     }
 
-    public T? SetValue(int x, int y, Func<T?, T?> modifier)
+    public T SetValue(int x, int y, Func<T, T> modifier)
     {
         return _items[GetIndex(x, y)] = modifier(_items[GetIndex(x, y)]);
     }
 
-    public T? SetValue(int x, int y, T? value)
+    public T SetValue(int x, int y, T value)
     {
         return _items[GetIndex(x, y)] = value;
     }
@@ -207,9 +224,9 @@ public class Grid<T> : Grid, IEnumerable<T>
         }
     }
 
-    public void ForEach(Func<(int x, int y), T?, T?> callback)
+    public void ForEach(Func<(int x, int y), T, T> callback)
     {
-        var newValues = new List<T?>();
+        var newValues = new List<T>();
         for (var y = 0; y < Height; y++)
         {
             for (var x = 0; x < Width; x++)

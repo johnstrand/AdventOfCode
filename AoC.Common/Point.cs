@@ -1,10 +1,16 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
 namespace AoC.Common;
+
 public class Point(int x, int y)
 {
     public int X { get; set; } = x;
     public int Y { get; set; } = y;
+
+    public Point Offset(int dx, int dy)
+    {
+        return new Point(X + dx, Y + dy);
+    }
 
     public static Point Origin { get; } = new(0, 0);
 
